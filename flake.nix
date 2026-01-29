@@ -20,6 +20,8 @@
           buildInputs = with pkgs; [
             nodejs_24 # You need to delete, nodejs on your own machine, if they are installed, and the version is causing YARN issues.
 			typescript-language-server
+            oracle-instantclient
+            lsof
           ];
         };
       }
