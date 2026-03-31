@@ -67,36 +67,9 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
+// INSERT (refactored logic)
 router.put('/people/:email/portfolio/assets', async (req, res) => {
-    const { email: urlEmail } = req.params;
-    const { email, createdDate, tickerSymbol, quantity, purchasePrice } = req.body || {};
-
-    // keep the current route semantics; this is the controller method for first feature
-    const effectiveEmail = email || urlEmail;
-
-    if (!effectiveEmail || !createdDate || !tickerSymbol || !Number.isFinite(quantity) || quantity <= 0 || !Number.isFinite(purchasePrice) || purchasePrice < 0) {
-        return res.status(400).json({ success: false, error: 'Missing or invalid required fields' });
-    }
-
-    try {
-        // Helper to implement in appService or portfolio service:
-        // insertContains({ email, createdDate, tickerSymbol, quantity, purchasePrice })
-        const insertResult = await appService.insertContains({
-            email: effectiveEmail,
-            createdDate,
-            tickerSymbol,
-            quantity,
-            purchasePrice
-        });
-
-        if (insertResult) {
-            return res.status(201).json({ success: true });
-        }
-
-        return res.status(500).json({ success: false, error: 'Insert failed' });
-    } catch (error) {
-        return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
-    }
+    return controller.addStockToPortfolioRequest(req, res);
 });
 
 module.exports = router;
