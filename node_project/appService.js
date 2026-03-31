@@ -142,11 +142,35 @@ async function countDemotable() {
     });
 }
 
+async function insertContains({ email, createdDate, tickerSymbol, quantity, purchasePrice }) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            INSERT INTO Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
+            VALUES (:email, TO_DATE(:createdDate, 'YYYY-MM-DD'), :tickerSymbol, :quantity, :purchasePrice)
+        `;
+
+        const binds = {
+            email,
+            createdDate,
+            tickerSymbol,
+            quantity,
+            purchasePrice
+        };
+
+        const result = await connection.execute(sql, binds, { autoCommit: true });
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('insertContains error', err);
+        throw err; // let controller handle it
+    });
+}
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
     updateNameDemotable, 
-    countDemotable
+    countDemotable,
+    insertContains
 };
