@@ -3,6 +3,9 @@ const appService = require('../../appService.js');
 
 const router = express.Router();
 
+const controller = require("../controller/controller.js");
+const persist = require("../persist/persist.js");
+
 // ----------------------------------------------------------
 // API endpoints
 // Modify or extend these routes based on your project's needs.
@@ -63,6 +66,15 @@ router.get('/count-demotable', async (req, res) => {
         });
     }
 });
+
+router.put("/people/:email/portfolio/assets", async (req, res) => {
+  const { email, date, ticker, quantity, price } = req.body;
+
+  
+  const people = persist.getPeople(email);
+  controller.addStockToPortfolio(people, ticker);
+
+})
 
 
 module.exports = router;
