@@ -1,6 +1,6 @@
 
 // insert controller 
-export async function addStockToPortfolioRequest(req, res) {
+async function addStockToPortfolioRequest(req, res) {
     const urlEmail = req.params?.email;
     const { email, createdDate, tickerSymbol, quantity, purchasePrice } = req.body;
     const effectiveEmail = email || urlEmail;
@@ -31,3 +31,5 @@ export async function addStockToPortfolioRequest(req, res) {
         return res.status(500).json({ success: false, error: err.message || 'Internal server error' });
     }
 }
+
+module.exports = {addStockToPortfolioRequest};

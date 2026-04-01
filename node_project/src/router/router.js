@@ -3,7 +3,7 @@ const appService = require('../../appService.js');
 
 const router = express.Router();
 
-import { addStockToPortfolioRequest } from "../controller/controller.js";
+const controller = require("../controller/controller.js");
 const persist = require("../persist/persist.js");
 
 // ----------------------------------------------------------
@@ -69,7 +69,7 @@ router.get('/count-demotable', async (req, res) => {
 
 // INSERT (refactored logic)
 router.put('/people/:email/portfolio/assets', async (req, res) => {
-    return addStockToPortfolioRequest(req, res);
+    return controller.addStockToPortfolioRequest(req, res);
 });
 
 module.exports = router;
