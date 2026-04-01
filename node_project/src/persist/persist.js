@@ -1,3 +1,5 @@
-export function getPeople(email) {
+function getPeople(email) {
 
 }
+
+module.exports = { getPeople };
