@@ -4,7 +4,6 @@ const appService = require('../../appService.js');
 const router = express.Router();
 
 const controller = require("../controller/controller.js");
-const persist = require("../persist/persist.js");
 
 // ----------------------------------------------------------
 // API endpoints
