@@ -4,6 +4,7 @@ const appService = require('../../appService.js');
 const router = express.Router();
 
 const controller = require("../controller/controller.js");
+const { autoCommit } = require('oracledb');
 
 // ----------------------------------------------------------
 // API endpoints
@@ -78,8 +79,33 @@ router.post("/filter/assets", async (req, res) => {
   // { logic: "or" } 
   const filter = req.body;
 
+  let query = "SELECT * FROM Assets";
+
+  if (filter.length > 0) {
+    query = query.concat(" WHERE ");
+  }
+
+
+  let binds = {};
+  let bindIndex = 0;
+
+  for (let i = 0; i < filter.length; i++) {
+    if (filter[i].column) { // then it's a column thing
+      const { column, operator, value } = filter[i];
+      
+      query += column + " " + operator + " :val" + bindIndex;
+      binds["val" + bindIndex] = value;
+      bindIndex++;
+
+    } else {
+      const { logic } = filter[i];
+
+      query = query.concat(" " + logic + "  ");
+    }
+  }
+
   const result =  await appService.withOracleDB(async (connection) => {
-        const result = await connection.execute("SELECT * FROM Assets WHERE TickerSymbol = 'TSLA'");
+        const result = await connection.execute(query, binds);
         return result.rows;
     }).catch(() => {
         return [];
