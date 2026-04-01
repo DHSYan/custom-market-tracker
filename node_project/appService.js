@@ -172,5 +172,6 @@ module.exports = {
     insertDemotable, 
     updateNameDemotable, 
     countDemotable,
-    insertContains
+    insertContains,
+    withOracleDB
 };

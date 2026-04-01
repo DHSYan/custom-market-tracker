@@ -79,7 +79,7 @@ router.post("/filter/assets", async (req, res) => {
   const filter = req.body;
 
   const result =  await appService.withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM Assets WHERE Name = "TSLA"');
+        const result = await connection.execute("SELECT * FROM Assets WHERE TickerSymbol = 'TSLA'");
         return result.rows;
     }).catch(() => {
         return [];
