@@ -23,6 +23,7 @@
           # add things you want in your shell here
           buildInputs = with pkgs; [
             nodejs_24 
+            lsof
 			typescript-language-server
           ];
         };
