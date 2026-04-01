@@ -72,4 +72,24 @@ router.put('/people/:email/portfolio/assets', async (req, res) => {
     return controller.addStockToPortfolioRequest(req, res);
 });
 
+router.post("/filter/assets", async (req, res) => {
+  // filter here is going to be an array of propositional statemnets
+  // { column: "name", operator: "=", value: "target" }
+  // or 
+  // { logic: "or" } 
+  const filter = req.body;
+
+  const result =  await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT * FROM Assets WHERE Name = "TSLA"');
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+
+
+  // should return an array of the tuples from the assets table
+  return res.status(200).json({ success: true, result: result });
+})
+
+
 module.exports = router;
