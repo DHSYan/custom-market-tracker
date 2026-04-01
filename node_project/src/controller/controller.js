@@ -2,7 +2,7 @@
 // insert controller 
 async function addStockToPortfolioRequest(req, res) {
     const urlEmail = req.params?.email;
-    const { email, createdDate, tickerSymbol, quantity, purchasePrice } = req.body;
+    const {email, createdDate, tickerSymbol, quantity, purchasePrice} = req.body;
     const effectiveEmail = email || urlEmail;
 
     if (!effectiveEmail || !createdDate || !tickerSymbol ||  quantity <= 0 ||  purchasePrice < 0) {
@@ -15,7 +15,7 @@ async function addStockToPortfolioRequest(req, res) {
         // implementation assumes function getPeople(email) that returns the people object for the given email.
 
         // call service helper 
-        const { insertContains } = require('../../appService.js');
+        const {insertContains} = require('../../appService.js');
         const result = await insertContains({
             email: effectiveEmail,
             createdDate,
@@ -33,3 +33,5 @@ async function addStockToPortfolioRequest(req, res) {
 }
 
 module.exports = {addStockToPortfolioRequest};
+
+//
