@@ -14,9 +14,8 @@ export async function addStockToPortfolioRequest(req, res) {
         // Example: const people = persist.getPeople(effective)
         // implementation assumes function getPeople(email) that returns the people object for the given email.
 
-        // the service helper to perform database insert (TODO):
+        // call service helper 
         const { insertContains } = require('../../appService.js');
-
         const result = await insertContains({
             email: effectiveEmail,
             createdDate,
