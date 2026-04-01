@@ -5,6 +5,7 @@ const router = express.Router();
 
 const featureOne = require("../controller/controller.js");
 const featureTwo = require("../controller/feature-update.js");
+const featureThree = require("../controller/feature-delete.js");
 const persist = require("../persist/persist.js");
 
 // ----------------------------------------------------------
@@ -82,5 +83,15 @@ router.put('people/:email', async (req, res) => {
 router.put('/assets/:tickerSymbol', async (req, res) => {
    return featureTwo.updateAssetRequest(req, res); 
 }); 
+
+// DELETE PEOPLE
+router.delete('', async (req, res) => {
+    return featureThree.deletePersonRequest(req, res); 
+});
+
+// DELETE PORTFOLIO
+router.delete('', async (req, res) => {
+    return featureThree.deletePortfolioRequest(req, res); 
+});
 
 module.exports = router;
