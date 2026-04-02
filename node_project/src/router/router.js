@@ -3,7 +3,9 @@ const appService = require('../../appService.js');
 
 const router = express.Router();
 
-const controller = require("../controller/controller.js");
+const featureOne = require("../controller/controller.js");
+const featureTwo = require("../controller/feature-update.js");
+const persist = require("../persist/persist.js");
 const { autoCommit } = require('oracledb');
 
 // ----------------------------------------------------------
@@ -69,9 +71,18 @@ router.get('/count-demotable', async (req, res) => {
 
 // INSERT (refactored logic)
 router.put('/people/:email/portfolio/assets', async (req, res) => {
-    return controller.addStockToPortfolioRequest(req, res);
+    return featureOne.addStockToPortfolioRequest(req, res);
 });
 
+// UPDATE PEOPLE
+router.put('people/:email', async (req, res) => {
+   return featureTwo.updatePersonPortfolioRequest(req, res); 
+}); 
+
+// UPDATE ASSETS 
+router.put('/assets/:tickerSymbol', async (req, res) => {
+   return featureTwo.updateAssetRequest(req, res); 
+}); 
 router.post("/filter/assets", async (req, res) => {
   // filter here is going to be an array of propositional statemnets
   // { column: "name", operator: "=", value: "target" }

@@ -1,4 +1,4 @@
-const oracledb = require('oracledb');
+ const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 
 const envVariables = loadEnvFile('./.env');
@@ -157,12 +157,51 @@ async function insertContains({ email, createdDate, tickerSymbol, quantity, purc
             purchasePrice
         };
 
-        const result = await connection.execute(sql, binds, { autoCommit: true });
+        const result = await connection.execute(sql, binds, {autoCommit: true});
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch((err) => {
         console.error('insertContains error', err);
         throw err; // let controller handle it
     });
+}
+
+// TODO: updatePeople 
+// !!!
+async function updatePeople({email, newNetWorth, newCash}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            UPDATE People
+            SET Networth = :newNetWorth,
+                Cash = :newCash
+            WHERE Email = :email`; 
+
+        const binds = {email, newNetWorth, newCash};
+        const result = await connection.execute(sql, binds, {autoCommit: true}); 
+        return result.rowsAffected && result.rowsAffected > 0; 
+    }).catch((err) => {
+        console.error('updatePeople error', err);
+        throw err; // ... 
+    })
+
+}
+// TODO: updateAssets 
+// !!!
+async function updateAssets({ticker, exchange, activeStatus, priceUpdate}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            UPDATE Assets
+            SET Exchange = :exchange,
+                IsActive = :activeStatus,
+                CurrentPrice = :priceUpdate
+            WHERE TickerSymbol = :ticker`; 
+
+        const binds = {ticker, exchange, activeStatus, priceUpdate};
+        const result = await connection.execute(sql, binds, {autoCommit: true}); 
+        return result.rowsAffected && result.rowsAffected > 0; 
+    }).catch((err) => {
+        console.error('updateAssets error', err);
+        throw err; // ... 
+    })
 }
 
 module.exports = {
@@ -173,5 +212,7 @@ module.exports = {
     updateNameDemotable, 
     countDemotable,
     insertContains,
+    updatePeople,
+    updateAssets,
     withOracleDB
 };
