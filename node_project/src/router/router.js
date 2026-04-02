@@ -68,10 +68,12 @@ router.get('/count-demotable', async (req, res) => {
 });
 
 // INSERT (refactored logic)
+// Feature 1
 router.put('/people/:email/portfolio/assets', async (req, res) => {
     return controller.addStockToPortfolioRequest(req, res);
 });
 
+// Feature 4 
 router.post("/filter/assets", async (req, res) => {
   // filter here is going to be an array of propositional statemnets
   // { column: "name", operator: "=", value: "target" }
