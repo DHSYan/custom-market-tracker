@@ -8,6 +8,7 @@ const featureTwo = require("../controller/feature-update.js");
 const featureThree = require("../controller/feature-delete.js");
 const featureSix = require ("../controller/feature-join.js"); 
 const featureEight = require("../controller/feature-having.js");
+const featureFive = require("../controller/feature-projection.js");
 const persist = require("../persist/persist.js");
 const { autoCommit } = require('oracledb');
 
@@ -156,6 +157,12 @@ router.get('/news-impact/:companyId', async (req, res) => {
 // HAVING (EPS greater than threshold) 
 router.get('/companies/eps-greater-than', async (req, res) => {
     return featureEight.epsGreaterThanRequest(req, res);
+});
+
+
+// FEATURE 5 
+router.get('/dynamic-report-builder', async (req, res) => {
+    return featureFive.dynamicReportBuilder.(req, res);
 });
 
 module.exports = router;
