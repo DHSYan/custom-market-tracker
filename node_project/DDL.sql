@@ -29,6 +29,7 @@ CREATE TABLE Portfolio (
 
 CREATE TABLE People (
     Email VARCHAR2(100) PRIMARY KEY,
+    PhoneNumber VARCHAR2(15) UNIQUE, 
     Networth NUMBER(12,2),
     Name VARCHAR2(100),
     Cash NUMBER(12,2)
@@ -251,20 +252,20 @@ insert into Portfolio (CreatedDate, Name, Currency)
 values (DATE '2026-03-01', 'Dividends', 'USD');
 
 
-insert into People (Email, Networth, Name, Cash)
-values ('a@demo.com', 250000.00, 'Alice Test', 15000.00);
+insert into People (Email, PhoneNumber, Networth, Name, Cash)
+values ('a@demo.com', 250000.00,'777-777-7777' ,'Alice Test', 15000.00);
 
-insert into People (Email, Networth, Name, Cash)
-values ('b@demo.com', 120000.00, 'Bob Tester', 8000.00);
+insert into People (Email, PhoneNumber, Networth, Name, Cash)
+values ('b@demo.com', 120000.00, '777-777-7778', 'Bob Tester', 8000.00);
 
-insert into People (Email, Networth, Name, Cash)
-values ('c@demo.com', 500000.00, 'C Testerer', 25000.00);
+insert into People (Email, PhoneNumber, Networth, Name, Cash)
+values ('c@demo.com', 500000.00, '777-777-7779', 'C Testerer', 25000.00);
 
-insert into People (Email, Networth, Name, Cash)
-values ('d@demo.com', 66666.00, 'D Testererer', 6000.00);
+insert into People (Email, PhoneNumber, Networth, Name, Cash)
+values ('d@demo.com', 66666.00, '777-777-7780', 'D Testererer', 6000.00);
 
-insert into People (Email, Networth, Name, Cash)
-values ('e@demo.com', 300000.00, 'E Testerererer', 12000.00);
+insert into People (Email, PhoneNumber, Networth, Name, Cash)
+values ('e@demo.com', 300000.00, '777-777-7781', 'E Testerererer', 12000.00);
 
 
 insert into Traders (Email, Performance, AverageTradeTime)

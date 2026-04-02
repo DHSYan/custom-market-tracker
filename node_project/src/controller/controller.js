@@ -33,5 +33,3 @@ async function addStockToPortfolioRequest(req, res) {
 }
 
 module.exports = {addStockToPortfolioRequest};
-
-//
