@@ -318,6 +318,39 @@ async function generateAssetReport(event) {
     }
 }
 
+// query 6. join: joins trader holdings into one table before viewing
+async function viewHoldings(event) {
+    event.preventDefault();
+    const emailValue = document.getElementById('joinEmail').value;
+    
+    const response = await fetch(`/trader-holdings?email=${encodeURIComponent(emailValue)}`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('joinMsg');
+    const tableElement = document.getElementById('joinTable');
+    const tableBody = tableElement.querySelector('tbody');
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    if (responseData.success) {
+        messageElement.textContent = "Displaying holdings:";
+
+        responseData.data.forEach(row => {
+            const tr = tableBody.insertRow();
+            row.forEach((field, index) => {
+                const td = tr.insertCell(index);
+                td.textContent = field;
+            });
+        });
+    } else {
+        messageElement.textContent = "Could not find holdings.";
+    }
+}
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -330,6 +363,7 @@ window.onload = function() {
     document.getElementById("buyAssetForm").addEventListener("submit", buyAsset);
     document.getElementById("searchAssetsForm").addEventListener("submit", searchAssets);
     document.getElementById("assetReportForm").addEventListener("submit", generateAssetReport);
+    document.getElementById("joinForm").addEventListener("submit", viewHoldings);
 };
 
 // General function to refresh the displayed table data. 

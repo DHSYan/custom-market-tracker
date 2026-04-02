@@ -25,6 +25,7 @@
         <button class="tab-button" onclick="openTab(event, 'tab-buy')">Buy Asset</button>
         <button class="tab-button" onclick="openTab(event, 'tab-search')">Search Assets</button>
         <button class="tab-button" onclick="openTab(event, 'tab-reports')">Asset Reports</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-join')">Trader Holdings</button>
     </div>
 
     <!-- query 2,3: managing people -->
@@ -167,9 +168,36 @@
             </tbody>
         </table>
     </div>
-</div>
+    </div>
 
-    
+    <!-- query 6. join: see multiple tables worth of information from joining -->
+    <div id="tab-join" class="tab-content">
+    <div class="section-box">
+        <h2>Trader Holdings View</h2>
+        <p>Enter a trader's email to see details for their current portfolio holdings and assets:</p>
+        <form id="joinForm">
+            Trader Email: <input type="email" id="joinEmail" placeholder="user@demo.com" required>
+            <button type="submit" class="button-style">View Holdings</button>
+        </form>
+        <p id="joinMsg" class="message"></p>
+
+        <!-- visual table for the display -->
+        <h3>Results Display</h3>
+        <table id="joinTable">
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Asset Name</th>
+                    <th>Quantity</th>
+                    <th>Purchase Price</th>
+                    <th>Currency</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
 
     <!-- External JavaScript file that contains the functionality/logic for the operations above. -->
     <script src="scripts.js"></script>
