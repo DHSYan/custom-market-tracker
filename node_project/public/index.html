@@ -26,6 +26,7 @@
         <button class="tab-button" onclick="openTab(event, 'tab-search')">Search Assets</button>
         <button class="tab-button" onclick="openTab(event, 'tab-reports')">Asset Reports</button>
         <button class="tab-button" onclick="openTab(event, 'tab-join')">Trader Holdings</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-group')">Market Summary</button>
     </div>
 
     <!-- query 2,3: managing people -->
@@ -191,6 +192,30 @@
                     <th>Quantity</th>
                     <th>Purchase Price</th>
                     <th>Currency</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+    <!-- query 7. group by: aggregates summary stats for market -->
+    <div id="tab-group" class="tab-content">
+    <div class="section-box">
+        <h2>Market Summary by Exchange</h2>
+        <p>View the total number of assets and average prices for each stock exchange:</p>
+        <button id="buttonGroup" class="button-style">Generate Summary</button>
+        <p id="groupMsg"></p>
+
+        <!-- visual table for the display -->
+        <h3>Results Display</h3>
+        <table id="groupTable">
+            <thead>
+                <tr>
+                    <th>Exchange</th>
+                    <th>Total Assets</th>
+                    <th>Average Price</th>
                 </tr>
             </thead>
             <tbody>

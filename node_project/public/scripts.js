@@ -351,6 +351,36 @@ async function viewHoldings(event) {
     }
 }
 
+// query 7. group by: aggregates summary stats for market
+async function fetchMarketSummary() {
+    const response = await fetch('/market-summary', {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('groupMsg');
+    const tableElement = document.getElementById('groupTable');
+    const tableBody = tableElement.querySelector('tbody');
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    if (responseData.success) {
+        messageElement.textContent = "Summary generated successfully.";
+
+        responseData.data.forEach(row => {
+            const tr = tableBody.insertRow();
+            row.forEach((field, index) => {
+                const td = tr.insertCell(index);
+                td.textContent = field;
+            });
+        });
+    } else {
+        messageElement.textContent = "Could not generate summary.";
+    }
+}
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -364,6 +394,7 @@ window.onload = function() {
     document.getElementById("searchAssetsForm").addEventListener("submit", searchAssets);
     document.getElementById("assetReportForm").addEventListener("submit", generateAssetReport);
     document.getElementById("joinForm").addEventListener("submit", viewHoldings);
+    document.getElementById("buttonGroup").addEventListener("click", fetchMarketSummary);
 };
 
 // General function to refresh the displayed table data. 
