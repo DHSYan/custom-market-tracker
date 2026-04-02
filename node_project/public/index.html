@@ -21,85 +21,103 @@
 
     <!-- tab navigation -->
     <div class="tab-nav">
-        <button class="tab-button active" onclick="openTab(event, 'tab-people')">Manage People</button>
-        <button class="tab-button" onclick="openTab(event, 'tab-buy')">Buy Asset</button>
+        <button class="tab-button active" onclick="openTab(event, 'tab-insert')">Records Insert</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-update')">Records Update</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-delete')">Records Deletion</button>
         <button class="tab-button" onclick="openTab(event, 'tab-search')">Search Assets</button>
         <button class="tab-button" onclick="openTab(event, 'tab-reports')">Asset Reports</button>
         <button class="tab-button" onclick="openTab(event, 'tab-join')">Trader Holdings</button>
         <button class="tab-button" onclick="openTab(event, 'tab-group')">Market Summary</button>
     </div>
 
-    <!-- query 2,3: managing people -->
-    <div id="tab-people" class="tab-content" style="display: block;">
+    <!-- query 1. insert: inserting records and buying assets -->
+    <div id="tab-insert" class="tab-content" style="display: block;">
     <div class="section-box">
-        <h2>Manage People</h2>
+        <h2>Records Insert</h2>
 
-        <!-- add a new person -->
-        <h3>Add a New Person</h3>
-        <form id="insertPersonForm">
-            Email: <input type="email" id="insEmail" placeholder="user@demo.com" required><br>
-            Name: <input type="text" id="insName" placeholder="Demo Name"><br>
-            Networth: <input type="number" id="insNet" placeholder="0.00"><br>
-            Cash: <input type="number" id="insCash" placeholder="0.00"><br>
-            Phone Number: <input type="text" id="insPhone" placeholder="604-456-7000"><br>
-            <button type="submit" class="button-style">Add Person</button>
-        </form>
-        <p id="insMsg" class="message"></p>
-        <hr>
-
-        <!-- 2. update: update an existing person -->
-        <h3>Change Person Information</h3>
-        <form id="updatePersonForm">
-            Email to update: <input type="email" id="updEmail" placeholder="Email to change data" required><br>
-            New Networth: <input type="number" id="updNet"><br>
-            New Cash: <input type="number" id="updCash"><br>
-            New Phone Number: <input type="text" id="updPhone"><br>
-            <button type="submit" class="button-style">Update Person</button>
-        </form>
-        <p id="updMsg" class="message"></p>
-        <hr>
-        
-        <!-- 3. delete: delete a person -->
-        <h3>Remove a Person</h3>
-        <form id="deletePersonForm">
-            Email to remove: <input type="email" id="delEmail" placeholder="Email to delete data" required><br>
-            <button type="submit" class="button-style">Delete Person</button>
-        </form>
-        <p id="delMsg" class="message"></p>
-        <hr>
-
-        <!-- visual table for the display -->
-        <h3>Current People in Database</h3>
-        <table id="peopleTable">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Networth</th>
-                    <th>Cash</th>
-                    <th>Phone</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-    </div>
-
-    <!-- query 1. insert: buying assets -->
-    <div id="tab-buy" class="tab-content">
-    <div class="section-box">
-        <h2>Buy Asset</h2>
-        <p>Purchase assets with an email:</p>
+        <!-- buying new assets -->
+        <h3>Buy Asset</h3>
         <form id="buyAssetForm">
-            Trader Email: <input type="email" id="buyEmail" placeholder="user@demo.com" required><br>
+            Email: <input type="email" id="buyEmail" placeholder="user@demo.com" required><br>
             Portfolio Date: <input type="date" id="buyDate" required><br>
             Ticker Symbol: <input type="text" id="buyTicker" placeholder="AAPL" required><br>
-            Quantity: <input type="number" id="buyQty" required><br>
-            Purchase Price: <input type="number" id="buyPrice" required><br>
+            Quantity: <input type="number" id="buyQty" required min="1"><br>
+            Purchase Price: <input type="number" id="buyPrice" required min="0"><br>
             <button type="submit" class="button-style">Buy Asset</button>
         </form>
         <p id="buyMsg" class="message"></p>
+        <hr>
+
+        <!-- recording new transactions -->
+        <h3>Record Transaction</h3>
+        <form id="recordTransactionForm">
+            Email: <input type="email" id="txEmail" placeholder="user@demo.com" required><br>
+            Portfolio Date: <input type="date" id="txDate" required><br>
+            Ticker Symbol: <input type="text" id="txTicker" placeholder="AAPL" required><br>
+            Quantity: <input type="number" id="txQty" required min="1"><br>
+            Execution Price: <input type="number" id="txPrice" required min="0"><br>
+            <button type="submit" class="button-style">Record Transaction</button>
+        </form>
+        <p id="txMsg" class="message"></p>
+    </div>
+    </div>
+
+    <!-- query 2. update: updating records and assets -->
+    <div id="tab-update" class="tab-content">
+    <div class="section-box">
+        <h2>Records Update</h2>
+
+        <!-- updating people records -->
+        <h3>Update Person</h3>
+        <form id="updatePersonForm">
+            Email: <input type="email" id="updEmail" placeholder="user@demo.com" required><br>
+            New Networth: <input type="number" id="updNet" required><br>
+            New Cash: <input type="number" id="updCash" required><br>
+            New Phone: <input type="text" id="updPhone" placeholder="604-456-7000" required><br>
+            <button type="submit" class="button-style">Update Person</button>
+        </form>
+        <p id="updPersonMsg" class="message"></p>
+        <hr>
+
+        <!-- updating new assets -->
+        <h3>Update Asset</h3>
+        <form id="updateAssetForm">
+            Ticker Symbol: <input type="text" id="updTicker" placeholder="AAPL" required><br>
+            Exchange: <input type="text" id="updExchange" placeholder="NASDAQ" required><br>
+            Active Status: 
+            <select id="updStatus" required>
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+            </select>
+            <br><br>
+            Price Update: <input type="number" id="updPrice" required><br>
+            <button type="submit" class="button-style">Update Asset</button>
+        </form>
+        <p id="updAssetMsg" class="message"></p>
+    </div>
+    </div>
+
+    <!-- query 3. delete: deleting records and portfolio -->
+    <div id="tab-delete" class="tab-content">
+    <div class="section-box">
+        <h2>Records Deletion</h2>
+
+        <!-- deleting people -->
+        <h3>Delete Person</h3>
+        <form id="deletePersonForm">
+            Trader Email: <input type="email" id="delEmail" placeholder="user@demo.com" required><br>
+            <button type="submit" class="button-style">Delete Person</button>
+        </form>
+        <p id="delPersonMsg" class="message"></p>
+        <hr>
+
+        <!-- deleting portfolio -->
+        <h3>Delete Portfolio</h3>
+        <form id="deletePortfolioForm">
+            Portfolio Created Date: <input type="date" id="delDate" required><br>
+            <button type="submit" class="button-style">Delete Portfolio</button>
+        </form>
+        <p id="delPortfolioMsg" class="message"></p>
     </div>
     </div>
 

@@ -62,43 +62,6 @@ async function fetchAndDisplayPeople() {
     });
 }
 
-// inserts new records into the people table
-// async function insertPerson(event) {
-//     event.preventDefault();
-
-//     const emailValue = document.getElementById('insEmail').value;
-//     const nameValue = document.getElementById('insName').value;
-//     const networthValue = document.getElementById('insNet').value;
-//     const cashValue = document.getElementById('insCash').value;
-//     const phoneValue = document.getElementById('insPhone').value;
-
-//     const response = await fetch(`/people/${emailValue}/portfolio/assets`, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({
-//             email: emailValue,
-//             name: nameValue,
-//             networth: networthValue,
-//             cash: cashValue,
-//             phone: phoneValue
-//         })
-//     });
-
-//     const responseData = await response.json();
-//     const messageElement = document.getElementById('insMsg');
-
-//     if (responseData.success) {
-//         messageElement.textContent = "Data inserted successfully!";
-//         fetchTableData();
-//     } else {
-//         messageElement.textContent = "Error inserting data!";
-//     }
-// }
-
-// --- End of provided sample code ---
-
 // for tab navigation on each query page
 function openTab(event, tabId) {
     const tabContents = document.querySelectorAll(".tab-content");
@@ -124,9 +87,8 @@ async function buyAsset(event) {
     const tickerValue = document.getElementById('buyTicker').value;
     const qtyValue = document.getElementById('buyQty').value;
     const priceValue = document.getElementById('buyPrice').value;
-    const endpointUrl = `/people/${emailValue}/portfolio/assets`;
-
-    const response = await fetch(endpointUrl, {
+    
+    const response = await fetch(`/people/${emailValue}/portfolio/assets`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -146,7 +108,41 @@ async function buyAsset(event) {
     if (responseData.success) {
         messageElement.textContent = "Asset purchased successfully!";
     } else {
-        messageElement.textContent = "Failed to buy asset.";
+        messageElement.textContent = "Error purchasing asset.";
+    }
+}
+
+// query 1. insert: records a transaction for a person
+async function recordTransaction(event) {
+    event.preventDefault();
+
+    const emailValue = document.getElementById('txEmail').value;
+    const dateValue = document.getElementById('txDate').value;
+    const tickerValue = document.getElementById('txTicker').value;
+    const qtyValue = document.getElementById('txQty').value;
+    const priceValue = document.getElementById('txPrice').value;
+    
+    const response = await fetch(`/people/${emailValue}/portfolio/assets`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: emailValue,
+            createdDate: dateValue,
+            tickerSymbol: tickerValue,
+            quantity: qtyValue,
+            purchasePrice: priceValue
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('txMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Transaction recorded successfully!";
+    } else {
+        messageElement.textContent = "Error recording transaction.";
     }
 }
 
@@ -158,29 +154,59 @@ async function updatePerson(event) {
     const networthValue = document.getElementById('updNet').value;
     const cashValue = document.getElementById('updCash').value;
     const phoneValue = document.getElementById('updPhone').value;
-
-        const endpointUrl = `/people/${emailValue}`;
-        const response = await fetch(endpointUrl, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: emailValue,
-                newNetWorth: networthValue,
-                newCash: cashValue,
-                newPhone: phoneValue
-            })
-        });
+    
+    const response = await fetch(`/people/${emailValue}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: emailValue,
+            newNetWorth: networthValue,
+            newCash: cashValue,
+            newPhone: phoneValue
+        })
+    });
 
     const responseData = await response.json();
-    const messageElement = document.getElementById('updMsg');
+    const messageElement = document.getElementById('updPersonMsg');
 
     if (responseData.success) {
         messageElement.textContent = "Person updated successfully!";
-        fetchTableData();
     } else {
-        messageElement.textContent = "Error updating data!";
+        messageElement.textContent = "Error updating person.";
+    }
+}
+
+// query 2. update: updates asset for maintenance
+async function updateAsset(event) {
+    event.preventDefault();
+
+    const tickerValue = document.getElementById('updTicker').value;
+    const exchangeValue = document.getElementById('updExchange').value;
+    const statusValue = parseInt(document.getElementById('updStatus').value); 
+    const priceValue = document.getElementById('updPrice').value;
+    
+    const response = await fetch(`/assets/${tickerValue}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            ticker: tickerValue,
+            exchange: exchangeValue,
+            activeStatus: statusValue, 
+            priceUpdate: priceValue
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('updAssetMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Asset updated successfully!";
+    } else {
+        messageElement.textContent = "Error updating asset.";
     }
 }
 
@@ -189,7 +215,7 @@ async function deletePerson(event) {
     event.preventDefault();
 
     const emailValue = document.getElementById('delEmail').value;
-
+    
     const response = await fetch(`/people/${emailValue}`, {
         method: 'DELETE',
         headers: {
@@ -201,15 +227,41 @@ async function deletePerson(event) {
     });
 
     const responseData = await response.json();
-    const messageElement = document.getElementById('delMsg');
+    const messageElement = document.getElementById('delPersonMsg');
 
     if (responseData.success) {
         messageElement.textContent = "Person deleted successfully!";
-        fetchTableData();
     } else {
-        messageElement.textContent = "Error deleting person!";
+        messageElement.textContent = "Error deleting person.";
     }
 }
+
+// query 3. delete: removes portfolio from creation date
+async function deletePortfolio(event) {
+    event.preventDefault();
+
+    const dateValue = document.getElementById('delDate').value;
+    
+    const response = await fetch(`/portfolios/${dateValue}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            createdDate: dateValue
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('delPortfolioMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Portfolio deleted successfully!";
+    } else {
+        messageElement.textContent = "Error deleting portfolio.";
+    }
+}
+
 // query 4. selection: filter function for the search with and/or
 async function searchAssets(event) {
     event.preventDefault();
@@ -387,10 +439,12 @@ async function fetchMarketSummary() {
 window.onload = function() {
     checkDbConnection();
     fetchTableData();
-    document.getElementById("insertPersonForm").addEventListener("submit", insertPerson);
-    document.getElementById("updatePersonForm").addEventListener("submit", updatePerson);
-    document.getElementById("deletePersonForm").addEventListener("submit", deletePerson);
     document.getElementById("buyAssetForm").addEventListener("submit", buyAsset);
+    document.getElementById("recordTransactionForm").addEventListener("submit", recordTransaction);
+    document.getElementById("updatePersonForm").addEventListener("submit", updatePerson);
+    document.getElementById("updateAssetForm").addEventListener("submit", updateAsset);
+    document.getElementById("deletePersonForm").addEventListener("submit", deletePerson);
+    document.getElementById("deletePortfolioForm").addEventListener("submit", deletePortfolio);
     document.getElementById("searchAssetsForm").addEventListener("submit", searchAssets);
     document.getElementById("assetReportForm").addEventListener("submit", generateAssetReport);
     document.getElementById("joinForm").addEventListener("submit", viewHoldings);
