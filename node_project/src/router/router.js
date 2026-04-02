@@ -9,6 +9,9 @@ const featureThree = require("../controller/feature-delete.js");
 const featureSix = require ("../controller/feature-join.js"); 
 const featureEight = require("../controller/feature-having.js");
 const { autoCommit } = require('oracledb');
+const featureFive = require("../controller/feature-projection.js");
+const featureSeven = require("../controller/feature-seven.js");
+
 
 // ----------------------------------------------------------
 // API endpoints
@@ -72,10 +75,12 @@ router.get('/count-demotable', async (req, res) => {
 });
 
 // INSERT (refactored logic)
+// Feature 1
 router.put('/people/:email/portfolio/assets', async (req, res) => {
     return featureOne.addStockToPortfolioRequest(req, res);
 });
 
+// Feature 4 
 // UPDATE PEOPLE
 router.put('/people/:email', async (req, res) => {
    return featureTwo.updatePersonPortfolioRequest(req, res); 
@@ -99,16 +104,15 @@ router.post("/filter/assets", async (req, res) => {
   }
 
 
+  // https://node-oracledb.readthedocs.io/en/latest/user_guide/sql_execution.html
   let binds = {};
-  let bindIndex = 0;
 
   for (let i = 0; i < filter.length; i++) {
     if (filter[i].column) { // then it's a column thing
       const { column, operator, value } = filter[i];
       
-      query += column + " " + operator + " :val" + bindIndex;
-      binds["val" + bindIndex] = value;
-      bindIndex++;
+      query += column + " " + operator + " :val" + i; // the i makes sure the :vali 
+      binds["val" + i] = value; // dynamically build the array
 
     } else {
       const { logic } = filter[i];
@@ -154,5 +158,16 @@ router.get('/news-impact/:companyId', async (req, res) => {
 router.get('/companies/eps-greater-than', async (req, res) => {
     return featureEight.havingEPSGreaterThanRequest(req, res);
 });
+
+
+// FEATURE 5 
+router.post('/dynamic-report-builder', async (req, res) => {
+    return featureFive.dynamicReportBuilder(req, res);
+});
+
+// feature 7 
+router.post("/market-summary-by-exchange", async (req, res) => {
+    return featureSeven.marketSummary(req, res);
+})
 
 module.exports = router;
