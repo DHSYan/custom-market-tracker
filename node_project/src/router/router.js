@@ -9,6 +9,7 @@ const featureThree = require("../controller/feature-delete.js");
 const featureSix = require ("../controller/feature-join.js"); 
 const featureEight = require("../controller/feature-having.js");
 const featureFive = require("../controller/feature-projection.js");
+const featureSeven = require("../controller/feature-seven.js");
 // const { autoCommit } = require('oracledb');
 
 // ----------------------------------------------------------
@@ -162,5 +163,10 @@ router.get('/companies/eps-greater-than', async (req, res) => {
 router.post('/dynamic-report-builder', async (req, res) => {
     return featureFive.dynamicReportBuilder(req, res);
 });
+
+// feature 7 
+router.post("/market-summary-by-exchange", async (req, res) => {
+    return featureSeven.marketSummary(req, res);
+})
 
 module.exports = router;
