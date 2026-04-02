@@ -63,99 +63,39 @@ async function fetchAndDisplayPeople() {
 }
 
 // inserts new records into the people table
-async function insertPerson(event) {
-    event.preventDefault();
+// async function insertPerson(event) {
+//     event.preventDefault();
 
-    const emailValue = document.getElementById('insEmail').value;
-    const nameValue = document.getElementById('insName').value;
-    const networthValue = document.getElementById('insNet').value;
-    const cashValue = document.getElementById('insCash').value;
-    const phoneValue = document.getElementById('insPhone').value;
+//     const emailValue = document.getElementById('insEmail').value;
+//     const nameValue = document.getElementById('insName').value;
+//     const networthValue = document.getElementById('insNet').value;
+//     const cashValue = document.getElementById('insCash').value;
+//     const phoneValue = document.getElementById('insPhone').value;
 
-    const response = await fetch('/insert-person', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: emailValue,
-            name: nameValue,
-            networth: networthValue,
-            cash: cashValue,
-            phone: phoneValue
-        })
-    });
+//     const response = await fetch(`/people/${emailValue}/portfolio/assets`, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({
+//             email: emailValue,
+//             name: nameValue,
+//             networth: networthValue,
+//             cash: cashValue,
+//             phone: phoneValue
+//         })
+//     });
 
-    const responseData = await response.json();
-    const messageElement = document.getElementById('insMsg');
+//     const responseData = await response.json();
+//     const messageElement = document.getElementById('insMsg');
 
-    if (responseData.success) {
-        messageElement.textContent = "Data inserted successfully!";
-        fetchTableData();
-    } else {
-        messageElement.textContent = "Error inserting data!";
-    }
-}
-
-// query 2. update: updates names and information in the people table
-async function updatePerson(event) {
-    event.preventDefault();
-
-    const emailValue = document.getElementById('updEmail').value;
-    const networthValue = document.getElementById('updNet').value;
-    const cashValue = document.getElementById('updCash').value;
-    const phoneValue = document.getElementById('updPhone').value;
-
-    const response = await fetch('/update-person', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: emailValue,
-            networth: networthValue,
-            cash: cashValue,
-            phone: phoneValue
-        })
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('updMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Person updated successfully!";
-        fetchTableData();
-    } else {
-        messageElement.textContent = "Error updating data!";
-    }
-}
-
-// query 3. delete: removes records from the people table
-async function deletePerson(event) {
-    event.preventDefault();
-
-    const emailValue = document.getElementById('delEmail').value;
-
-    const response = await fetch('/delete-person', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: emailValue
-        })
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('delMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Person deleted successfully!";
-        fetchTableData();
-    } else {
-        messageElement.textContent = "Error deleting person!";
-    }
-}
+//     if (responseData.success) {
+//         messageElement.textContent = "Data inserted successfully!";
+//         fetchTableData();
+//     } else {
+//         messageElement.textContent = "Error inserting data!";
+//     }
+// }
 
 // --- End of provided sample code ---
 
@@ -210,6 +150,66 @@ async function buyAsset(event) {
     }
 }
 
+// query 2. update: updates names and information in the people table
+async function updatePerson(event) {
+    event.preventDefault();
+
+    const emailValue = document.getElementById('updEmail').value;
+    const networthValue = document.getElementById('updNet').value;
+    const cashValue = document.getElementById('updCash').value;
+    const phoneValue = document.getElementById('updPhone').value;
+
+        const endpointUrl = `/people/${emailValue}`;
+        const response = await fetch(endpointUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: emailValue,
+                newNetWorth: networthValue,
+                newCash: cashValue,
+                newPhone: phoneValue
+            })
+        });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('updMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Person updated successfully!";
+        fetchTableData();
+    } else {
+        messageElement.textContent = "Error updating data!";
+    }
+}
+
+// query 3. delete: removes records from the people table
+async function deletePerson(event) {
+    event.preventDefault();
+
+    const emailValue = document.getElementById('delEmail').value;
+
+    const response = await fetch(`/people/${emailValue}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: emailValue
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('delMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Person deleted successfully!";
+        fetchTableData();
+    } else {
+        messageElement.textContent = "Error deleting person!";
+    }
+}
 // query 4. selection: filter function for the search with and/or
 async function searchAssets(event) {
     event.preventDefault();

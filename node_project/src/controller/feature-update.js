@@ -1,15 +1,16 @@
 
 // FEATURE 2: UPDATE 
 
+// !!!! CHANGE TO ADD PHONE NUMBER UPDATE 
 
 // controllers 
 async function updatePersonPortfolioRequest(req, res) {
     const urlEmail = req.params?.email;
 
-    const {email, newNetWorth, newCash} = req.body; 
+    const {email, newNetWorth, newCash, newPhone} = req.body; 
     const effectiveEmail = email || urlEmail; 
 
-    if (!effectiveEmail || !newNetWorth || !newCash) {
+    if (!effectiveEmail || !newNetWorth || !newCash || !newPhone) {
         return res.status(400).json({ success: false, error: 'Missing or invalid required fields' });
     }
 
@@ -18,7 +19,8 @@ async function updatePersonPortfolioRequest(req, res) {
         const result = await updatePeople({
             email: effectiveEmail,
             newNetWorth, 
-            newCash
+            newCash,
+            newPhone
         });
 
         if (result) return res.status(201).json({ success: true });

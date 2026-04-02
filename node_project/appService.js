@@ -166,15 +166,16 @@ async function insertContains({ email, createdDate, tickerSymbol, quantity, purc
 }
 
 // updatePeople 
-async function updatePeople({email, newNetWorth, newCash}) {
+async function updatePeople({email, newNetWorth, newCash, newPhone}) {
     return await withOracleDB(async (connection) => {
         const sql = `
             UPDATE People
             SET Networth = :newNetWorth,
-                Cash = :newCash
+                Cash = :newCash,
+                Phone = :newPhone
             WHERE Email = :email`; 
 
-        const binds = {email, newNetWorth, newCash};
+        const binds = {email, newNetWorth, newCash, newPhone};
         const result = await connection.execute(sql, binds, {autoCommit: true}); 
         return result.rowsAffected && result.rowsAffected > 0; 
     }).catch((err) => {
