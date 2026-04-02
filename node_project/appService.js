@@ -165,8 +165,7 @@ async function insertContains({ email, createdDate, tickerSymbol, quantity, purc
     });
 }
 
-// TODO: updatePeople 
-// !!! fix for key update 
+// updatePeople 
 async function updatePeople({email, newNetWorth, newCash}) {
     return await withOracleDB(async (connection) => {
         const sql = `
@@ -184,8 +183,7 @@ async function updatePeople({email, newNetWorth, newCash}) {
     })
 
 }
-// TODO: updateAssets 
-// !!! fix for key update 
+//  updateAssets 
 async function updateAssets({ticker, exchange, activeStatus, priceUpdate}) {
     return await withOracleDB(async (connection) => {
         const sql = `
@@ -298,6 +296,30 @@ async function joinInvestors({companyId}) {
     })
 }
 
+// epsGreaterThan (threshold) 
+async function epsGreaterThan({threshold}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            SELECT
+                Sector,
+                AVG(EarningsPerShare) AS AvgEPS
+            FROM
+                Stocks
+            GROUP BY
+                Sector
+            HAVING
+                AVG(EarningsPerShare) > :threshold`;
+
+    const binds = {threshold};
+    const result = await connection.execute(sql, binds, {autoCommit: true});
+    return result.rows;
+
+    }).catch((err) => {
+        console.error('epsGreaterThan error', err);
+        throw err; 
+    })
+} 
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
@@ -312,6 +334,7 @@ module.exports = {
     deletePortfolio,
     joinHoldings, 
     joinInvestors, 
+    epsGreaterThan,
     withOracleDB
 };
 

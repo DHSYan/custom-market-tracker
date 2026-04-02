@@ -1,5 +1,6 @@
 // feature 6 - join 
 
+// controllers
 // Input: email 
 async function joinPeopleContainsAssetRequest(req, res) {
     const urlEmail = req.params?.email;

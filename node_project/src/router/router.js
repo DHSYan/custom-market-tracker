@@ -6,7 +6,8 @@ const router = express.Router();
 const featureOne = require("../controller/controller.js");
 const featureTwo = require("../controller/feature-update.js");
 const featureThree = require("../controller/feature-delete.js");
-const featureSix = require ("../controller/feature-join.js")
+const featureSix = require ("../controller/feature-join.js"); 
+const featureEight = require("../controller/feature-having.js");
 const persist = require("../persist/persist.js");
 const { autoCommit } = require('oracledb');
 
@@ -148,6 +149,11 @@ router.get('/holdings/:email', async (req, res) => {
 // JOIN (News impact rows)
 router.get('/news-impact/:companyId', async (req, res) => {
     return featureSix.joinOwnsPeopleCompanyRequest(req, res);
+});
+
+// HAVING (EPS greater than threshold) 
+router.get('/companies/eps-greater-than', async (req, res) => {
+    return featureEight.epsGreaterThanRequest(req, res);
 });
 
 module.exports = router;

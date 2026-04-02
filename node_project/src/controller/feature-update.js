@@ -2,7 +2,7 @@
 // FEATURE 2: UPDATE 
 
 
-// 
+// controllers 
 async function updatePersonPortfolioRequest(req, res) {
     const urlEmail = req.params?.email;
 

@@ -1,5 +1,6 @@
 // FEATURE 3: DELETE 
 
+// controllers
 // Input: email 
 async function deletePersonRequest(req, res) {
     const urlEmail = req.params?.email;
