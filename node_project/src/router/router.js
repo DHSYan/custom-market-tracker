@@ -77,7 +77,7 @@ router.put('/people/:email/portfolio/assets', async (req, res) => {
 });
 
 // UPDATE PEOPLE
-router.put('people/:email', async (req, res) => {
+router.put('/people/:email', async (req, res) => {
    return featureTwo.updatePersonPortfolioRequest(req, res); 
 }); 
 
@@ -152,7 +152,7 @@ router.get('/news-impact/:companyId', async (req, res) => {
 
 // HAVING (EPS greater than threshold) 
 router.get('/companies/eps-greater-than', async (req, res) => {
-    return featureEight.epsGreaterThanRequest(req, res);
+    return featureEight.havingEPSGreaterThanRequest(req, res);
 });
 
 module.exports = router;

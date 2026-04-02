@@ -4,7 +4,8 @@
 async function havingEPSGreaterThanRequest(req, res) {
 
     const threshold = parseFloat(req.query.threshold);
-     if (!threshold || isNaN(threshold)) {
+    // fixed to allow threshold === 0 
+     if (isNaN(threshold)) {
         return res.status(400).json({ success: false, error: 'Missing or invalid threshold' });
     }
 
