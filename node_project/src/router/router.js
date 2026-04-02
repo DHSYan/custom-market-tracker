@@ -80,7 +80,7 @@ router.put('/people/:email/portfolio/assets', async (req, res) => {
     return featureOne.addStockToPortfolioRequest(req, res);
 });
 
-// Feature 4 
+// Feature 2
 // UPDATE PEOPLE
 router.put('/people/:email', async (req, res) => {
    return featureTwo.updatePersonPortfolioRequest(req, res); 
@@ -90,12 +90,30 @@ router.put('/people/:email', async (req, res) => {
 router.put('/assets/:tickerSymbol', async (req, res) => {
    return featureTwo.updateAssetRequest(req, res); 
 }); 
+
+// Feature 4 
 router.post("/filter/assets", async (req, res) => {
   // filter here is going to be an array of propositional statemnets
   // { column: "name", operator: "=", value: "target" }
   // or 
   // { logic: "or" } 
-  const filter = req.body;
+  const { col1, val1, logic, col2, val2 } = req.body;
+
+  const allowedColumns = ["Exchange", "Currency"];
+  const allowedLogic = ["AND", "OR"];
+
+  if (!allowedColumns.includes(col1) || !allowedColumns.includes(col2) || !allowedLogic.includes((logic || "").toUpperCase()) ||
+      val1 === undefined || val1 === null ||
+      val2 === undefined || val2 === null
+  ) {
+    return res.status(400).json({ success: false, error: "Invalid search input" });
+  }
+
+  const filter = [
+    { column: col1, operator: "=", value: val1 },
+    { logic: logic.toUpperCase() },
+    { column: col2, operator: "=", value: val2 }
+  ];
 
   let query = "SELECT * FROM Assets";
 
@@ -105,15 +123,16 @@ router.post("/filter/assets", async (req, res) => {
 
 
   // https://node-oracledb.readthedocs.io/en/latest/user_guide/sql_execution.html
-  let binds = {};
+  const binds = {}; // change to constant 
+  let bindIndex = 0;  
 
   for (let i = 0; i < filter.length; i++) {
     if (filter[i].column) { // then it's a column thing
       const { column, operator, value } = filter[i];
       
-      query += column + " " + operator + " :val" + i; // the i makes sure the :vali 
-      binds["val" + i] = value; // dynamically build the array
-
+      query += column + " " + operator + " :val" + bindIndex; // the i makes sure the :vali 
+      binds["val" + bindIndex] = value; // dynamically build the array
+      bindIndex++;
     } else {
       const { logic } = filter[i];
 
@@ -130,11 +149,11 @@ router.post("/filter/assets", async (req, res) => {
 
 
   // should return an array of the tuples from the assets table
-  return res.status(200).json({ success: true, result: result });
+  return res.status(200).json({ success: true, data: result });
 })
 
 
-// DELETE PEOPLE
+// DELETE PEOPLE (3)
 router.delete('/people/:email', async (req, res) => {
     return featureThree.deletePersonRequest(req, res); 
 });
@@ -144,7 +163,7 @@ router.delete('/portfolios/:createdDate', async (req, res) => {
     return featureThree.deletePortfolioRequest(req, res); 
 });
 
-// JOIN (trader holdings view) 
+// JOIN (trader holdings view) (6)
 router.get('/holdings/:email', async (req, res) => {
     return featureSix.joinPeopleContainsAssetRequest(req, res);
 });
@@ -154,7 +173,7 @@ router.get('/news-impact/:companyId', async (req, res) => {
     return featureSix.joinOwnsPeopleCompanyRequest(req, res);
 });
 
-// HAVING (EPS greater than threshold) 
+// HAVING (EPS greater than threshold) (8)
 router.get('/companies/eps-greater-than', async (req, res) => {
     return featureEight.havingEPSGreaterThanRequest(req, res);
 });
@@ -163,6 +182,11 @@ router.get('/companies/eps-greater-than', async (req, res) => {
 // FEATURE 5 
 router.post('/dynamic-report-builder', async (req, res) => {
     return featureFive.dynamicReportBuilder(req, res);
+});
+
+// FEATURE 5 (metadata) 
+router.get('/projection-metadata', async (req, res) => {
+    return featureFive.getProjectionMetadata(req, res);
 });
 
 // feature 7 

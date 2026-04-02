@@ -167,27 +167,35 @@
     <div id="tab-reports" class="tab-content">
     <div class="section-box">
         <h2>Asset Report Builder</h2>
-        <p>Select the columns you want to include in your report:</p>
-        <form id="assetReportForm">
-            <input type="checkbox" name="columns" value="TickerSymbol"> Ticker
-            <input type="checkbox" name="columns" value="Name"> Name
-            <input type="checkbox" name="columns" value="Exchange"> Exchange
-            <input type="checkbox" name="columns" value="Currency"> Currency
-            <input type="checkbox" name="columns" value="Sector"> Sector
-            <br><br>
-            <button type="submit" class="button-style">Generate Report</button>
-        </form>
-        <p id="reportMsg" class="message"></p>
+        <p>Select table, pick columns, and set export order:</p>
 
-        <!-- visual table for the display -->
-        <table id="reportTable">
-            <thead>
-                <tr id="reportHeader">  
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <form id="assetReportForm">
+            <label for="reportTableSelect">Table:</label>
+            <select id="reportTableSelect" required onchange="renderColumnPicker(this.value)">
+                <option value="Assets">Assets</option>
+                <option value="People">People</option>
+                <option value="Companies">Companies</option>
+                <option value="Stocks">Stocks</option>
+            </select>
+
+            <h4>Available Columns</h4>
+            <div id="reportColumnsContainer"></div>
+
+            <h4>Selected Column Order</h4>
+            <ol id="selectedColumnsOrder"></ol>
+
+            <button type="submit" class="button-style">Generate Report</button>
+            <button type="button" id="exportReportCsvBtn" class="button-style" onclick="exportReportCsv()">Export CSV</button>
+        </form>
+
+<p id="reportMsg" class="message"></p>
+
+<table id="reportTable">
+    <thead>
+        <tr id="reportHeader"></tr>
+    </thead>
+    <tbody></tbody>
+</table>
     </div>
     </div>
 

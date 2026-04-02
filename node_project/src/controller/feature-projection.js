@@ -43,6 +43,13 @@ const allowedColumns = {
   OnRelation: ["TickerSymbol", "EventID"],
   Reports: ["Email", "EventID"]
 };
+
+// helper for projection metadata 
+function getProjectionMetadata(req, res) {
+  return res.status(200).json({ success: true, data: allowedColumns });
+}
+
+// input: tables AND columns???
 async function dynamicReportBuilder(req, res) {
 
   const { table, columns }  = req.body;
@@ -52,6 +59,10 @@ async function dynamicReportBuilder(req, res) {
     return
   }
 
+  // fix: added check for valid columns 
+  if (!Array.isArray(columns) || columns.length === 0) {
+    return res.status(400).json({ success: false, error: "columns required" });
+  }
 
   for (let i = 0; i < columns.length; i++) {
     if (!allowedColumns[table].includes(columns[i])) {
@@ -75,12 +86,15 @@ async function dynamicReportBuilder(req, res) {
 
   await appService.withOracleDB(async (connection) => {
     const result = await connection.execute(query);
-    res.status(200).json({ success: true, result: result.rows });
-    return
+    return res.status(200).json({
+      success: true,
+      data: result.rows,
+      columns: columns,
+      table: table
+    });
   }).catch(() => {
-    res.status(500).json({ success: false, error: "internal error" });
-    return
+    return res.status(500).json({ success: false, error: "internal error" });
   });
 }
 
-module.exports  = { dynamicReportBuilder };
+module.exports  = { dynamicReportBuilder, getProjectionMetadata };

@@ -6,7 +6,7 @@ async function marketSummaryByExchange(req, res) {
 
   await appService.withOracleDB(async (connection) => {
     const result = await connection.execute(query);
-    res.status(200).json({ success: true, result: result.rows });
+    res.status(200).json({ success: true, data: result.rows });
     return
   }).catch(() => {
     res.status(500).json({ success: false, error: "internal error" });
@@ -20,7 +20,7 @@ async function marketSummaryBySector(req, res) {
 
   await appService.withOracleDB(async (connection) => {
     const result = await connection.execute(query);
-    res.status(200).json({ success: true, result: result.rows });
+    res.status(200).json({ success: true, data: result.rows });
     return
   }).catch(() => {
     res.status(500).json({ success: false, error: "internal error" });

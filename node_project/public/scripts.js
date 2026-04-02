@@ -248,7 +248,7 @@ async function searchAssets(event) {
     const col2 = document.getElementById('selCol2').value;
     const val2 = document.getElementById('selVal2').value;
 
-    const response = await fetch('/search-assets', {
+    const response = await fetch('/filter/assets', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -287,26 +287,28 @@ async function searchAssets(event) {
 }
 
 // query 5. projection: multiselect checkboxes that then fetches report data
+let projectionMetadata = {};
+let selectedReportColumns = [];
+let lastReportColumns = [];
+let lastReportRows = [];
 async function generateAssetReport(event) {
     event.preventDefault();
 
-    const checkboxes = document.querySelectorAll('input[name="columns"]:checked');
-    const selectedColumns = [];
-    checkboxes.forEach((cb) => {
-        selectedColumns.push(cb.value);
-    });
+    const tableName = document.getElementById('reportTableSelect').value;
+    const selectedColumns = [...selectedReportColumns];
 
     if (selectedColumns.length === 0) {
         alert("Please select at least one column.");
         return;
     }
 
-    const response = await fetch('/project-assets', {
+    const response = await fetch('/dynamic-report-builder', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+            table: tableName,
             columns: selectedColumns
         })
     });
@@ -325,8 +327,14 @@ async function generateAssetReport(event) {
         tableBody.innerHTML = '';
     }
 
-    if (responseData.success) {
-        messageElement.textContent = "Report generated successfully.";
+    // throw error message instead of success (nobody cares if it works lol)
+    if (!responseData.success) {
+        messageElement.textContent = responseData.error || "Error generating report.";
+        return;
+    }
+
+    lastReportColumns = selectedColumns;
+    lastReportRows = responseData.data || []; // if array is undefined
 
         selectedColumns.forEach(col => {
             const th = document.createElement('th');
@@ -334,17 +342,133 @@ async function generateAssetReport(event) {
             headerRow.appendChild(th);
         });
 
-        responseData.data.forEach(row => {
+        lastReportRows.forEach(row => {
             const tr = tableBody.insertRow();
             row.forEach(field => {
                 const td = tr.insertCell();
                 td.textContent = field;
             });
         });
-    } else {
-        messageElement.textContent = "Error generating report.";
+} 
+
+// CSV export function 
+function exportReportCsv() {
+    if (!lastReportColumns.length || !lastReportRows.length) {
+        alert("Generate a report before exporting.");
+        return;
     }
+
+    const escapeCsv = (v) => {
+        const s = String(v ?? "");
+        return '"' + s.replace(/"/g, '""') + '"';
+    };
+
+    const lines = [];
+    lines.push(lastReportColumns.map(escapeCsv).join(','));
+    lastReportRows.forEach(row => {
+        lines.push(row.map(escapeCsv).join(','));
+    });
+
+    const csv = lines.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'dynamic_report.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
+
+// feature 5: pick columns 
+function renderColumnPicker(tableName) {
+    const container = document.getElementById('reportColumnsContainer');
+    const orderedList = document.getElementById('selectedColumnsOrder');
+    const cols = projectionMetadata[tableName] || [];
+
+    container.innerHTML = '';
+    orderedList.innerHTML = '';
+    selectedReportColumns = [];
+
+    cols.forEach((col) => {
+        const label = document.createElement('label');
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = col;
+
+        cb.addEventListener('change', () => {
+            if (cb.checked) {
+                selectedReportColumns.push(col);
+            } else {
+                selectedReportColumns = selectedReportColumns.filter(c => c !== col);
+            }
+            renderSelectedOrder();
+        });
+
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(' ' + col));
+        container.appendChild(label);
+        container.appendChild(document.createElement('br'));
+    });
+}
+
+// render function for feature 5
+function renderSelectedOrder() {
+    const orderedList = document.getElementById('selectedColumnsOrder');
+    orderedList.innerHTML = '';
+
+    selectedReportColumns.forEach((col, idx) => {
+        const li = document.createElement('li');
+        li.textContent = col + ' ';
+
+        const upBtn = document.createElement('button');
+        upBtn.type = 'button';
+        upBtn.textContent = '^';
+        upBtn.disabled = idx === 0;
+        upBtn.onclick = () => {
+            const temp = selectedReportColumns[idx - 1];
+            selectedReportColumns[idx - 1] = selectedReportColumns[idx];
+            selectedReportColumns[idx] = temp;
+            renderSelectedOrder();
+        };
+
+        const downBtn = document.createElement('button');
+        downBtn.type = 'button';
+        downBtn.textContent = 'v';
+        downBtn.disabled = idx === selectedReportColumns.length - 1;
+        downBtn.onclick = () => {
+            const temp = selectedReportColumns[idx + 1];
+            selectedReportColumns[idx + 1] = selectedReportColumns[idx];
+            selectedReportColumns[idx] = temp;
+            renderSelectedOrder();
+        };
+
+        li.appendChild(upBtn);
+        li.appendChild(downBtn);
+        orderedList.appendChild(li);
+    });
+}
+
+async function loadProjectionMetadata() {
+    const response = await fetch('/projection-metadata', { method: 'GET' });
+    const responseData = await response.json();
+    if (!responseData.success) return;
+    // !!! test later to this actually populates UI !!!
+    projectionMetadata = responseData.data || {};
+    // 
+    const tableSelect = document.getElementById('reportTableSelect');
+    renderColumnPicker(tableSelect.value);
+
+    tableSelect.addEventListener('change', () => {
+        renderColumnPicker(tableSelect.value);
+    });
+}
+// error handler for above method 
+loadProjectionMetadata().catch((err) => {
+    console.error("Failed to load projection metadata:", err);
+});
 
 // query 6. join: joins trader holdings into one table before viewing
 async function viewTraderHoldings(event) {
@@ -412,10 +536,14 @@ async function viewCompanyInvestors(event) {
 
 // query 7. group by: aggregates summary stats for market
 async function fetchMarketSummary() {
-    const response = await fetch('/market-summary', {
-        method: 'GET'
+    const response = await fetch('/market-summary-by-exchange', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        // add toggle for sector if needed here 
+        body: JSON.stringify({ type: 'EXCHANGE' })
     });
-
     const responseData = await response.json();
     const messageElement = document.getElementById('groupMsg');
     const tableElement = document.getElementById('groupTable');
