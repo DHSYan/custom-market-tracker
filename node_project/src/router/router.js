@@ -3,6 +3,9 @@ const appService = require('../../appService.js');
 
 const router = express.Router();
 
+const controller = require("../controller/controller.js");
+const { autoCommit } = require('oracledb');
+
 // ----------------------------------------------------------
 // API endpoints
 // Modify or extend these routes based on your project's needs.
@@ -63,6 +66,55 @@ router.get('/count-demotable', async (req, res) => {
         });
     }
 });
+
+// INSERT (refactored logic)
+router.put('/people/:email/portfolio/assets', async (req, res) => {
+    return controller.addStockToPortfolioRequest(req, res);
+});
+
+router.post("/filter/assets", async (req, res) => {
+  // filter here is going to be an array of propositional statemnets
+  // { column: "name", operator: "=", value: "target" }
+  // or 
+  // { logic: "or" } 
+  const filter = req.body;
+
+  let query = "SELECT * FROM Assets";
+
+  if (filter.length > 0) {
+    query = query.concat(" WHERE ");
+  }
+
+
+  let binds = {};
+  let bindIndex = 0;
+
+  for (let i = 0; i < filter.length; i++) {
+    if (filter[i].column) { // then it's a column thing
+      const { column, operator, value } = filter[i];
+      
+      query += column + " " + operator + " :val" + bindIndex;
+      binds["val" + bindIndex] = value;
+      bindIndex++;
+
+    } else {
+      const { logic } = filter[i];
+
+      query = query.concat(" " + logic + "  ");
+    }
+  }
+
+  const result =  await appService.withOracleDB(async (connection) => {
+        const result = await connection.execute(query, binds);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+
+
+  // should return an array of the tuples from the assets table
+  return res.status(200).json({ success: true, result: result });
+})
 
 
 module.exports = router;
