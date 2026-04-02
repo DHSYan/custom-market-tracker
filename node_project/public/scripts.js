@@ -222,8 +222,16 @@ async function searchAssets(event) {
 
     const response = await fetch('/search-assets', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ col1, val1, logic, col2, val2 })
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            col1,
+            val1,
+            logic,
+            col2,
+            val2
+        })
     });
 
     const responseData = await response.json();
@@ -250,6 +258,66 @@ async function searchAssets(event) {
     }
 }
 
+// query 5. projection: multiselect checkboxes that then fetches report data
+async function generateAssetReport(event) {
+    event.preventDefault();
+
+    const checkboxes = document.querySelectorAll('input[name="columns"]:checked');
+    const selectedColumns = [];
+    checkboxes.forEach((cb) => {
+        selectedColumns.push(cb.value);
+    });
+
+    if (selectedColumns.length === 0) {
+        alert("Please select at least one column.");
+        return;
+    }
+
+    const response = await fetch('/project-assets', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            columns: selectedColumns
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('reportMsg');
+    const headerRow = document.getElementById('reportHeader');
+    const tableElement = document.getElementById('reportTable');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    if (headerRow) {
+        headerRow.innerHTML = '';
+    }
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    if (responseData.success) {
+        messageElement.textContent = "Report generated successfully.";
+
+        selectedColumns.forEach(col => {
+            const th = document.createElement('th');
+            th.textContent = col;
+            headerRow.appendChild(th);
+        });
+
+        responseData.data.forEach(row => {
+            const tr = tableBody.insertRow();
+            row.forEach(field => {
+                const td = tr.insertCell();
+                td.textContent = field;
+            });
+        });
+    } else {
+        messageElement.textContent = "Error generating report.";
+    }
+}
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -261,6 +329,7 @@ window.onload = function() {
     document.getElementById("deletePersonForm").addEventListener("submit", deletePerson);
     document.getElementById("buyAssetForm").addEventListener("submit", buyAsset);
     document.getElementById("searchAssetsForm").addEventListener("submit", searchAssets);
+    document.getElementById("assetReportForm").addEventListener("submit", generateAssetReport);
 };
 
 // General function to refresh the displayed table data. 

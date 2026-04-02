@@ -24,6 +24,7 @@
         <button class="tab-button active" onclick="openTab(event, 'tab-people')">Manage People</button>
         <button class="tab-button" onclick="openTab(event, 'tab-buy')">Buy Asset</button>
         <button class="tab-button" onclick="openTab(event, 'tab-search')">Search Assets</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-reports')">Asset Reports</button>
     </div>
 
     <!-- query 2,3: managing people -->
@@ -139,6 +140,36 @@
         </table>
     </div>
     </div>
+
+    <!-- query 5. projection: report generator with multiselect columns -->
+    <div id="tab-reports" class="tab-content">
+    <div class="section-box">
+        <h2>Asset Report Builder</h2>
+        <p>Select the columns you want to include in your report:</p>
+        <form id="assetReportForm">
+            <input type="checkbox" name="columns" value="TickerSymbol"> Ticker
+            <input type="checkbox" name="columns" value="Name"> Name
+            <input type="checkbox" name="columns" value="Exchange"> Exchange
+            <input type="checkbox" name="columns" value="Currency"> Currency
+            <input type="checkbox" name="columns" value="Sector"> Sector
+            <br><br>
+            <button type="submit" class="button-style">Generate Report</button>
+        </form>
+        <p id="reportMsg" class="message"></p>
+
+        <!-- visual table for the display -->
+        <table id="reportTable">
+            <thead>
+                <tr id="reportHeader">  
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    
 
     <!-- External JavaScript file that contains the functionality/logic for the operations above. -->
     <script src="scripts.js"></script>
