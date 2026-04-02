@@ -7,6 +7,7 @@ const featureOne = require("../controller/controller.js");
 const featureTwo = require("../controller/feature-update.js");
 const featureThree = require("../controller/feature-delete.js");
 const persist = require("../persist/persist.js");
+const { autoCommit } = require('oracledb');
 
 // ----------------------------------------------------------
 // API endpoints
@@ -83,6 +84,50 @@ router.put('people/:email', async (req, res) => {
 router.put('/assets/:tickerSymbol', async (req, res) => {
    return featureTwo.updateAssetRequest(req, res); 
 }); 
+router.post("/filter/assets", async (req, res) => {
+  // filter here is going to be an array of propositional statemnets
+  // { column: "name", operator: "=", value: "target" }
+  // or 
+  // { logic: "or" } 
+  const filter = req.body;
+
+  let query = "SELECT * FROM Assets";
+
+  if (filter.length > 0) {
+    query = query.concat(" WHERE ");
+  }
+
+
+  let binds = {};
+  let bindIndex = 0;
+
+  for (let i = 0; i < filter.length; i++) {
+    if (filter[i].column) { // then it's a column thing
+      const { column, operator, value } = filter[i];
+      
+      query += column + " " + operator + " :val" + bindIndex;
+      binds["val" + bindIndex] = value;
+      bindIndex++;
+
+    } else {
+      const { logic } = filter[i];
+
+      query = query.concat(" " + logic + "  ");
+    }
+  }
+
+  const result =  await appService.withOracleDB(async (connection) => {
+        const result = await connection.execute(query, binds);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+
+
+  // should return an array of the tuples from the assets table
+  return res.status(200).json({ success: true, result: result });
+})
+
 
 // DELETE PEOPLE
 router.delete('', async (req, res) => {

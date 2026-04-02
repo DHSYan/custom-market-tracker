@@ -246,5 +246,7 @@ module.exports = {
     updatePeople,
     updateAssets,
     deletePeople,
-    deletePortfolio
+    deletePortfolio,
+    withOracleDB
 };
+
