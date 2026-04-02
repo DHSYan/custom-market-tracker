@@ -166,7 +166,7 @@ async function insertContains({ email, createdDate, tickerSymbol, quantity, purc
 }
 
 // TODO: updatePeople 
-// !!!
+// !!! fix for key update 
 async function updatePeople({email, newNetWorth, newCash}) {
     return await withOracleDB(async (connection) => {
         const sql = `
@@ -185,7 +185,7 @@ async function updatePeople({email, newNetWorth, newCash}) {
 
 }
 // TODO: updateAssets 
-// !!!
+// !!! fix for key update 
 async function updateAssets({ticker, exchange, activeStatus, priceUpdate}) {
     return await withOracleDB(async (connection) => {
         const sql = `
@@ -203,6 +203,37 @@ async function updateAssets({ticker, exchange, activeStatus, priceUpdate}) {
         throw err; // ... 
     })
 }
+// DELETE People (by email)
+async function deletePeople({email}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            DELETE FROM People
+            WHERE Email = :email`;
+        
+        const binds = {email}; 
+        const result = await connection.execute(sql, binds, {autoCommit: true}); 
+        return result.rowsAffected && result.rowsAffected > 0; 
+    }).catch((err) => {
+        console.error('deletePeople error', err);
+        throw err; // ... 
+    })
+}
+
+// DELETE Portfolio (by created date)
+async function deletePortfolio({createdDate}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            DELETE FROM Portfolio
+            WHERE CreatedDate = TO_DATE(:createdDate, 'YYYY-MM-DD')`;  
+        
+        const binds = {createdDate};
+        const result = await connection.execute(sql, binds, {autoCommit: true});
+        return result.rowsAffected && result.rowsAffected > 0; 
+    }).catch((err) => {
+        console.error('deletePortfolio error', err);
+        throw err; // ... 
+    })
+}
 
 module.exports = {
     testOracleConnection,
@@ -214,5 +245,8 @@ module.exports = {
     insertContains,
     updatePeople,
     updateAssets,
+    deletePeople,
+    deletePortfolio,
     withOracleDB
 };
+

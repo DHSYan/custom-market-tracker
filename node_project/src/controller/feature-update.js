@@ -30,9 +30,12 @@ async function updatePersonPortfolioRequest(req, res) {
 }
 
 async function updateAssetRequest(req, res) {
-    const {ticker, exchange, activeStatus, priceUpdate} = req.body; 
+    const urlTicker = req.params?.ticker; 
 
-    if (!ticker || !exchange || !(activeStatus === 0 || activeStatus === 1) || !priceUpdate) {
+    const {ticker, exchange, activeStatus, priceUpdate} = req.body; 
+    const effectiveTicker = ticker || urlTicker; 
+
+    if (!effectiveTicker || !exchange || !(activeStatus === 0 || activeStatus === 1) || !priceUpdate) {
         return res.status(400).json({ success: false, error: 'Missing or invalid required fields' });
     }
     try { 

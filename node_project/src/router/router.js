@@ -5,6 +5,7 @@ const router = express.Router();
 
 const featureOne = require("../controller/controller.js");
 const featureTwo = require("../controller/feature-update.js");
+const featureThree = require("../controller/feature-delete.js");
 const persist = require("../persist/persist.js");
 const { autoCommit } = require('oracledb');
 
@@ -127,5 +128,15 @@ router.post("/filter/assets", async (req, res) => {
   return res.status(200).json({ success: true, result: result });
 })
 
+
+// DELETE PEOPLE
+router.delete('', async (req, res) => {
+    return featureThree.deletePersonRequest(req, res); 
+});
+
+// DELETE PORTFOLIO
+router.delete('', async (req, res) => {
+    return featureThree.deletePortfolioRequest(req, res); 
+});
 
 module.exports = router;
