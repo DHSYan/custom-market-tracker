@@ -203,7 +203,7 @@ async function updateAssets({ticker, exchange, activeStatus, priceUpdate}) {
         throw err; // ... 
     })
 }
-// DELETE People (by email)
+// deletePeople (by email)
 async function deletePeople({email}) {
     return await withOracleDB(async (connection) => {
         const sql = `
@@ -219,7 +219,7 @@ async function deletePeople({email}) {
     })
 }
 
-// DELETE Portfolio (by created date)
+// deletePortfolio (by created date)
 async function deletePortfolio({createdDate}) {
     return await withOracleDB(async (connection) => {
         const sql = `
@@ -235,6 +235,69 @@ async function deletePortfolio({createdDate}) {
     })
 }
 
+// joinHoldings (email) 
+
+async function joinHoldings({email}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            SELECT
+                p.Email,
+                p.Name,
+                p.Networth,
+                c.TickerSymbol,
+                c.Quantity,
+                a.CurrentPrice,
+                a.Name AS AssetName,
+                (c.Quantity * a.CurrentPrice) AS MarketValue,
+                (c.Quantity * (a.CurrentPrice - a.PurchasePrice)) AS ProfitAndLoss -- pnl calculated based on purchase price, not last price 
+            FROM People p
+            JOIN Contains c ON c.Email = p.Email
+            JOIN Assets a ON a.TickerSymbol = c.TickerSymbol
+            WHERE p.Email = :email`;
+
+        const binds = {email};
+        const result = await connection.execute(sql, binds, {autoCommit: true});
+        return result.rows; 
+
+    }).catch((err) => {
+        console.error('joinHoldings error', err);
+        throw err; // ... 
+    })
+}
+
+// joinInvestors (company id)
+
+async function joinInvestors({companyId}) { 
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            SELECT
+                c.CompanyID,
+                c.FoundedDate,
+                c.IsPublic,
+                c.EmployeeCount,
+                p.Email,
+                p.Name,
+                p.PhoneNumber,
+                p.Networth,
+                p.Cash,
+                o.Percentage
+            FROM Companies c
+            JOIN Owns o
+                ON o.CompanyID = c.CompanyID
+            JOIN People p
+                ON p.Email = o.Email
+            WHERE c.CompanyID = :companyId`;
+        
+        const binds = {companyId};
+        const result = await connection.execute(sql, binds, {autoCommit: true});
+        return result.rows;
+
+    }).catch((err) => {
+        console.error('joinInvestors error', err);
+        throw err; 
+    })
+}
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
@@ -247,6 +310,8 @@ module.exports = {
     updateAssets,
     deletePeople,
     deletePortfolio,
+    joinHoldings, 
+    joinInvestors, 
     withOracleDB
 };
 

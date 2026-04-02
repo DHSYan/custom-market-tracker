@@ -6,6 +6,7 @@ const router = express.Router();
 const featureOne = require("../controller/controller.js");
 const featureTwo = require("../controller/feature-update.js");
 const featureThree = require("../controller/feature-delete.js");
+const featureSix = require ("../controller/feature-join.js")
 const persist = require("../persist/persist.js");
 const { autoCommit } = require('oracledb');
 
@@ -130,13 +131,23 @@ router.post("/filter/assets", async (req, res) => {
 
 
 // DELETE PEOPLE
-router.delete('', async (req, res) => {
+router.delete('/people/:email', async (req, res) => {
     return featureThree.deletePersonRequest(req, res); 
 });
 
 // DELETE PORTFOLIO
-router.delete('', async (req, res) => {
+router.delete('/portfolios/:createdDate', async (req, res) => {
     return featureThree.deletePortfolioRequest(req, res); 
+});
+
+// JOIN (trader holdings view) 
+router.get('/holdings/:email', async (req, res) => {
+    return featureSix.joinPeopleContainsAssetRequest(req, res);
+});
+
+// JOIN (News impact rows)
+router.get('/news-impact/:companyId', async (req, res) => {
+    return featureSix.joinOwnsPeopleCompanyRequest(req, res);
 });
 
 module.exports = router;
