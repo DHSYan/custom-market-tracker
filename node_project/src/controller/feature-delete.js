@@ -33,7 +33,7 @@ async function deletePortfolioRequest(req, res) {
      
     try { 
         const {deletePortfolio} = require('../../appService.js');
-        const result = await deletePeople({
+        const result = await deletePortfolio({
             createdDate: effectiveDate,
         });
 
