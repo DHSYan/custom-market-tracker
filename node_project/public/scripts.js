@@ -81,12 +81,7 @@ function openTab(event, tabId) {
 // query 1. insert: inserts a new asset into a portfolio
 async function buyAsset(event) {
     event.preventDefault();
-
     const emailValue = document.getElementById('buyEmail').value;
-    const dateValue = document.getElementById('buyDate').value;
-    const tickerValue = document.getElementById('buyTicker').value;
-    const qtyValue = document.getElementById('buyQty').value;
-    const priceValue = document.getElementById('buyPrice').value;
     
     const response = await fetch(`/people/${emailValue}/portfolio/assets`, {
         method: 'PUT',
@@ -95,10 +90,10 @@ async function buyAsset(event) {
         },
         body: JSON.stringify({
             email: emailValue,
-            createdDate: dateValue,
-            tickerSymbol: tickerValue,
-            quantity: qtyValue,
-            purchasePrice: priceValue
+            createdDate: document.getElementById('buyDate').value,
+            tickerSymbol: document.getElementById('buyTicker').value,
+            quantity: document.getElementById('buyQty').value,
+            purchasePrice: document.getElementById('buyPrice').value
         })
     });
 
@@ -115,12 +110,7 @@ async function buyAsset(event) {
 // query 1. insert: records a transaction for a person
 async function recordTransaction(event) {
     event.preventDefault();
-
     const emailValue = document.getElementById('txEmail').value;
-    const dateValue = document.getElementById('txDate').value;
-    const tickerValue = document.getElementById('txTicker').value;
-    const qtyValue = document.getElementById('txQty').value;
-    const priceValue = document.getElementById('txPrice').value;
     
     const response = await fetch(`/people/${emailValue}/portfolio/assets`, {
         method: 'PUT',
@@ -129,10 +119,10 @@ async function recordTransaction(event) {
         },
         body: JSON.stringify({
             email: emailValue,
-            createdDate: dateValue,
-            tickerSymbol: tickerValue,
-            quantity: qtyValue,
-            purchasePrice: priceValue
+            createdDate: document.getElementById('txDate').value,
+            tickerSymbol: document.getElementById('txTicker').value,
+            quantity: document.getElementById('txQty').value,
+            purchasePrice: document.getElementById('txPrice').value
         })
     });
 
@@ -149,11 +139,7 @@ async function recordTransaction(event) {
 // query 2. update: updates names and information in the people table
 async function updatePerson(event) {
     event.preventDefault();
-
     const emailValue = document.getElementById('updEmail').value;
-    const networthValue = document.getElementById('updNet').value;
-    const cashValue = document.getElementById('updCash').value;
-    const phoneValue = document.getElementById('updPhone').value;
     
     const response = await fetch(`/people/${emailValue}`, {
         method: 'PUT',
@@ -162,9 +148,9 @@ async function updatePerson(event) {
         },
         body: JSON.stringify({
             email: emailValue,
-            newNetWorth: networthValue,
-            newCash: cashValue,
-            newPhone: phoneValue
+            newNetWorth: document.getElementById('updNet').value,
+            newCash: document.getElementById('updCash').value,
+            newPhone: document.getElementById('updPhone').value
         })
     });
 
@@ -181,11 +167,7 @@ async function updatePerson(event) {
 // query 2. update: updates asset for maintenance
 async function updateAsset(event) {
     event.preventDefault();
-
     const tickerValue = document.getElementById('updTicker').value;
-    const exchangeValue = document.getElementById('updExchange').value;
-    const statusValue = parseInt(document.getElementById('updStatus').value); 
-    const priceValue = document.getElementById('updPrice').value;
     
     const response = await fetch(`/assets/${tickerValue}`, {
         method: 'PUT',
@@ -194,9 +176,9 @@ async function updateAsset(event) {
         },
         body: JSON.stringify({
             ticker: tickerValue,
-            exchange: exchangeValue,
-            activeStatus: statusValue, 
-            priceUpdate: priceValue
+            exchange: document.getElementById('updExchange').value,
+            activeStatus: parseInt(document.getElementById('updStatus').value), 
+            priceUpdate: document.getElementById('updPrice').value
         })
     });
 
@@ -213,7 +195,6 @@ async function updateAsset(event) {
 // query 3. delete: removes records from the people table
 async function deletePerson(event) {
     event.preventDefault();
-
     const emailValue = document.getElementById('delEmail').value;
     
     const response = await fetch(`/people/${emailValue}`, {
@@ -221,9 +202,7 @@ async function deletePerson(event) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            email: emailValue
-        })
+        body: JSON.stringify({ email: emailValue })
     });
 
     const responseData = await response.json();
@@ -239,7 +218,6 @@ async function deletePerson(event) {
 // query 3. delete: removes portfolio from creation date
 async function deletePortfolio(event) {
     event.preventDefault();
-
     const dateValue = document.getElementById('delDate').value;
     
     const response = await fetch(`/portfolios/${dateValue}`, {
@@ -247,9 +225,7 @@ async function deletePortfolio(event) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            createdDate: dateValue
-        })
+        body: JSON.stringify({ createdDate: dateValue })
     });
 
     const responseData = await response.json();
