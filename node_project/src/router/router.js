@@ -10,6 +10,8 @@ const featureSix = require ("../controller/feature-join.js");
 const featureEight = require("../controller/feature-having.js");
 const featureFive = require("../controller/feature-projection.js");
 const featureSeven = require("../controller/feature-seven.js");
+const featureNine = require("../controller/feature-nine.js");
+
 // const { autoCommit } = require('oracledb');
 
 // ----------------------------------------------------------
@@ -171,7 +173,7 @@ router.post("/market-summary-by-exchange", async (req, res) => {
 
 // feature 9
 router.post("/find-the-best", async (req, res) => {
-    return featureSeven.findTheBest(req, res);
+    return featureNine.findTheBest(req, res);
 })
 
 
