@@ -9,8 +9,7 @@ const featureThree = require("../controller/feature-delete.js");
 const featureSix = require ("../controller/feature-join.js"); 
 const featureEight = require("../controller/feature-having.js");
 const featureFive = require("../controller/feature-projection.js");
-const persist = require("../persist/persist.js");
-const { autoCommit } = require('oracledb');
+// const { autoCommit } = require('oracledb');
 
 // ----------------------------------------------------------
 // API endpoints
