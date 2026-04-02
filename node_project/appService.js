@@ -213,5 +213,6 @@ module.exports = {
     countDemotable,
     insertContains,
     updatePeople,
-    updateAssets 
+    updateAssets,
+    withOracleDB
 };
