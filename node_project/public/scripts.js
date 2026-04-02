@@ -433,6 +433,38 @@ async function fetchMarketSummary() {
     }
 }
 
+// query 8. having: filter exchanges based on average price performance 
+async function filterCompaniesByEPS(event) {
+    event.preventDefault();
+    const thresholdValue = document.getElementById('epsThreshold').value;
+    
+    const response = await fetch(`/companies/eps-greater-than?threshold=${thresholdValue}`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('epsMsg');
+    const tableElement = document.getElementById('epsTable');
+    const tableBody = tableElement.querySelector('tbody');
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    if (responseData.success) {
+        messageElement.textContent = "Displaying high EPS companies.";
+        responseData.data.forEach(row => {
+            const tr = tableBody.insertRow();
+            row.forEach(field => {
+                const td = tr.insertCell();
+                td.textContent = field;
+            });
+        });
+    } else {
+        messageElement.textContent = "Error fetching companies.";
+    }
+}
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -449,6 +481,7 @@ window.onload = function() {
     document.getElementById("assetReportForm").addEventListener("submit", generateAssetReport);
     document.getElementById("joinForm").addEventListener("submit", viewHoldings);
     document.getElementById("buttonGroup").addEventListener("click", fetchMarketSummary);
+    document.getElementById("epsFilterForm").addEventListener("submit", filterCompaniesByEPS);
 };
 
 // General function to refresh the displayed table data. 

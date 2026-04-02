@@ -28,6 +28,8 @@
         <button class="tab-button" onclick="openTab(event, 'tab-reports')">Asset Reports</button>
         <button class="tab-button" onclick="openTab(event, 'tab-join')">Trader Holdings</button>
         <button class="tab-button" onclick="openTab(event, 'tab-group')">Market Summary</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-having')">Market Analytics</button>
+
     </div>
 
     <!-- query 1. insert: inserting records and buying assets -->
@@ -234,6 +236,31 @@
                     <th>Exchange</th>
                     <th>Total Assets</th>
                     <th>Average Price</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+    <!-- query 8. having: find exchanges where avg asset price is greater than some user X  -->
+    <div id="tab-having" class="tab-content">
+    <div class="section-box">
+        <h2>High EPS Companies (Having)</h2>
+        <h3>Filter by Earnings Per Share</h3>
+        <form id="epsFilterForm">
+            EPS Threshold: <input type="number" id="epsThreshold" placeholder="5.00" required><br>
+            <button type="submit" class="button-style">Find Companies</button>
+        </form>
+        <p id="epsMsg" class="message"></p>
+
+        <!-- visual table for the display -->
+        <table id="epsTable">
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Average EPS</th>
                 </tr>
             </thead>
             <tbody>
