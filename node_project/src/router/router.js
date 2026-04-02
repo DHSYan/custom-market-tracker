@@ -11,7 +11,9 @@ const featureEight = require("../controller/feature-having.js");
 const { autoCommit } = require('oracledb');
 const featureFive = require("../controller/feature-projection.js");
 const featureSeven = require("../controller/feature-seven.js");
+const featureNine = require("../controller/feature-nine.js");
 
+// const { autoCommit } = require('oracledb');
 
 // ----------------------------------------------------------
 // API endpoints
@@ -169,5 +171,11 @@ router.post('/dynamic-report-builder', async (req, res) => {
 router.post("/market-summary-by-exchange", async (req, res) => {
     return featureSeven.marketSummary(req, res);
 })
+
+// feature 9
+router.post("/find-the-best", async (req, res) => {
+    return featureNine.findTheBest(req, res);
+})
+
 
 module.exports = router;
