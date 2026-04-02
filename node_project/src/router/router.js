@@ -103,16 +103,15 @@ router.post("/filter/assets", async (req, res) => {
   }
 
 
+  // https://node-oracledb.readthedocs.io/en/latest/user_guide/sql_execution.html
   let binds = {};
-  let bindIndex = 0;
 
   for (let i = 0; i < filter.length; i++) {
     if (filter[i].column) { // then it's a column thing
       const { column, operator, value } = filter[i];
       
-      query += column + " " + operator + " :val" + bindIndex;
-      binds["val" + bindIndex] = value;
-      bindIndex++;
+      query += column + " " + operator + " :val" + i; // the i makes sure the :vali 
+      binds["val" + i] = value; // dynamically build the array
 
     } else {
       const { logic } = filter[i];
@@ -161,8 +160,8 @@ router.get('/companies/eps-greater-than', async (req, res) => {
 
 
 // FEATURE 5 
-router.get('/dynamic-report-builder', async (req, res) => {
-    return featureFive.dynamicReportBuilder.(req, res);
+router.post('/dynamic-report-builder', async (req, res) => {
+    return featureFive.dynamicReportBuilder(req, res);
 });
 
 module.exports = router;
