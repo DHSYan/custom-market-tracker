@@ -36,68 +36,58 @@ async function checkDbConnection() {
     });
 }
 
-// Fetches data from the demotable and displays it.
-async function fetchAndDisplayUsers() {
-    const tableElement = document.getElementById('demotable');
+// Fetches data from the People table and displays it.
+async function fetchAndDisplayPeople() {
+    const tableElement = document.getElementById('peopleTable');
     const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/demotable', {
+    const response = await fetch('/get-people', {
         method: 'GET'
     });
 
     const responseData = await response.json();
-    const demotableContent = responseData.data;
+    const peopleContent = responseData.data;
 
     // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
 
-    demotableContent.forEach(user => {
+    peopleContent.forEach(person => {
         const row = tableBody.insertRow();
-        user.forEach((field, index) => {
+        person.forEach((field, index) => {
             const cell = row.insertCell(index);
             cell.textContent = field;
         });
     });
 }
 
-// This function resets or initializes the demotable.
-async function resetDemotable() {
-    const response = await fetch("/initiate-demotable", {
-        method: 'POST'
-    });
-    const responseData = await response.json();
-
-    if (responseData.success) {
-        const messageElement = document.getElementById('resetResultMsg');
-        messageElement.textContent = "demotable initiated successfully!";
-        fetchTableData();
-    } else {
-        alert("Error initiating table!");
-    }
-}
-
-// Inserts new records into the demotable.
-async function insertDemotable(event) {
+// inserts new records into the people table
+async function insertPerson(event) {
     event.preventDefault();
 
-    const idValue = document.getElementById('insertId').value;
-    const nameValue = document.getElementById('insertName').value;
+    const emailValue = document.getElementById('insEmail').value;
+    const nameValue = document.getElementById('insName').value;
+    const networthValue = document.getElementById('insNet').value;
+    const cashValue = document.getElementById('insCash').value;
+    const phoneValue = document.getElementById('insPhone').value;
 
-    const response = await fetch('/insert-demotable', {
+    const response = await fetch('/insert-person', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            id: idValue,
-            name: nameValue
+            email: emailValue,
+            name: nameValue,
+            networth: networthValue,
+            cash: cashValue,
+            phone: phoneValue
         })
     });
 
     const responseData = await response.json();
-    const messageElement = document.getElementById('insertResultMsg');
+    const messageElement = document.getElementById('insMsg');
 
     if (responseData.success) {
         messageElement.textContent = "Data inserted successfully!";
@@ -107,53 +97,83 @@ async function insertDemotable(event) {
     }
 }
 
-// Updates names in the demotable.
-async function updateNameDemotable(event) {
+// query 2. update: updates names and information in the people table
+async function updatePerson(event) {
     event.preventDefault();
 
-    const oldNameValue = document.getElementById('updateOldName').value;
-    const newNameValue = document.getElementById('updateNewName').value;
+    const emailValue = document.getElementById('updEmail').value;
+    const networthValue = document.getElementById('updNet').value;
+    const cashValue = document.getElementById('updCash').value;
+    const phoneValue = document.getElementById('updPhone').value;
 
-    const response = await fetch('/update-name-demotable', {
+    const response = await fetch('/update-person', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            oldName: oldNameValue,
-            newName: newNameValue
+            email: emailValue,
+            networth: networthValue,
+            cash: cashValue,
+            phone: phoneValue
         })
     });
 
     const responseData = await response.json();
-    const messageElement = document.getElementById('updateNameResultMsg');
+    const messageElement = document.getElementById('updMsg');
 
     if (responseData.success) {
-        messageElement.textContent = "Name updated successfully!";
+        messageElement.textContent = "Person updated successfully!";
         fetchTableData();
     } else {
-        messageElement.textContent = "Error updating name!";
+        messageElement.textContent = "Error updating data!";
     }
 }
 
-// Counts rows in the demotable.
-// Modify the function accordingly if using different aggregate functions or procedures.
-async function countDemotable() {
-    const response = await fetch("/count-demotable", {
-        method: 'GET'
+// query 3. delete: removes records from the people table
+async function deletePerson(event) {
+    event.preventDefault();
+
+    const emailValue = document.getElementById('delEmail').value;
+
+    const response = await fetch('/delete-person', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: emailValue
+        })
     });
 
     const responseData = await response.json();
-    const messageElement = document.getElementById('countResultMsg');
+    const messageElement = document.getElementById('delMsg');
 
     if (responseData.success) {
-        const tupleCount = responseData.count;
-        messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
+        messageElement.textContent = "Person deleted successfully!";
+        fetchTableData();
     } else {
-        alert("Error in count demotable!");
+        messageElement.textContent = "Error deleting person!";
     }
 }
 
+// --- End of provided sample code ---
+
+// for tab navigation on each query page
+function openTab(event, tabId) {
+    const tabContents = document.querySelectorAll(".tab-content");
+    tabContents.forEach(tab => {
+        tab.style.display = "none";
+    });
+
+    const tabButtons = document.querySelectorAll(".tab-button");
+    tabButtons.forEach(button => {
+        button.classList.remove("active");
+    });
+
+    document.getElementById(tabId).style.display = "block";
+    event.currentTarget.classList.add("active");
+}
 
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
@@ -161,14 +181,13 @@ async function countDemotable() {
 window.onload = function() {
     checkDbConnection();
     fetchTableData();
-    document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
-    document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
-    document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
-    document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    document.getElementById("insertPersonForm").addEventListener("submit", insertPerson);
+    document.getElementById("updatePersonForm").addEventListener("submit", updatePerson);
+    document.getElementById("deletePersonForm").addEventListener("submit", deletePerson);
 };
 
 // General function to refresh the displayed table data. 
 // You can invoke this after any table-modifying operation to keep consistency.
 function fetchTableData() {
-    fetchAndDisplayUsers();
+    fetchAndDisplayPeople();
 }
