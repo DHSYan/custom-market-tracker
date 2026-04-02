@@ -371,17 +371,17 @@ async function generateAssetReport(event) {
 }
 
 // query 6. join: joins trader holdings into one table before viewing
-async function viewHoldings(event) {
+async function viewTraderHoldings(event) {
     event.preventDefault();
     const emailValue = document.getElementById('joinEmail').value;
     
-    const response = await fetch(`/trader-holdings?email=${encodeURIComponent(emailValue)}`, {
+    const response = await fetch(`/holdings/${emailValue}`, {
         method: 'GET'
     });
 
     const responseData = await response.json();
-    const messageElement = document.getElementById('joinMsg');
-    const tableElement = document.getElementById('joinTable');
+    const messageElement = document.getElementById('joinHoldingsMsg');
+    const tableElement = document.getElementById('holdingsTable');
     const tableBody = tableElement.querySelector('tbody');
 
     if (tableBody) {
@@ -389,17 +389,48 @@ async function viewHoldings(event) {
     }
 
     if (responseData.success) {
-        messageElement.textContent = "Displaying holdings:";
-
+        messageElement.textContent = "Displaying trader holdings.";
         responseData.data.forEach(row => {
             const tr = tableBody.insertRow();
-            row.forEach((field, index) => {
-                const td = tr.insertCell(index);
+            row.forEach(field => {
+                const td = tr.insertCell();
                 td.textContent = field;
             });
         });
     } else {
-        messageElement.textContent = "Could not find holdings.";
+        messageElement.textContent = "Error fetching holdings.";
+    }
+}
+
+// query 6. join: view company investors of a given companyID
+async function viewCompanyInvestors(event) {
+    event.preventDefault();
+    const compIdValue = document.getElementById('joinCompId').value;
+    
+    const response = await fetch(`/news-impact/${compIdValue}`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('joinInvestorsMsg');
+    const tableElement = document.getElementById('investorsTable');
+    const tableBody = tableElement.querySelector('tbody');
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    if (responseData.success) {
+        messageElement.textContent = "Displaying company investors.";
+        responseData.data.forEach(row => {
+            const tr = tableBody.insertRow();
+            row.forEach(field => {
+                const td = tr.insertCell();
+                td.textContent = field;
+            });
+        });
+    } else {
+        messageElement.textContent = "Error fetching investors.";
     }
 }
 
@@ -479,7 +510,8 @@ window.onload = function() {
     document.getElementById("deletePortfolioForm").addEventListener("submit", deletePortfolio);
     document.getElementById("searchAssetsForm").addEventListener("submit", searchAssets);
     document.getElementById("assetReportForm").addEventListener("submit", generateAssetReport);
-    document.getElementById("joinForm").addEventListener("submit", viewHoldings);
+    document.getElementById("viewHoldingsForm").addEventListener("submit", viewTraderHoldings);
+    document.getElementById("viewInvestorsForm").addEventListener("submit", viewCompanyInvestors);
     document.getElementById("buttonGroup").addEventListener("click", fetchMarketSummary);
     document.getElementById("epsFilterForm").addEventListener("submit", filterCompaniesByEPS);
 };
