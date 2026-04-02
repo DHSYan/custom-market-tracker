@@ -1,4 +1,4 @@
-const oracledb = require('oracledb');
+ const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 
 const envVariables = loadEnvFile('./.env');
@@ -157,13 +157,168 @@ async function insertContains({ email, createdDate, tickerSymbol, quantity, purc
             purchasePrice
         };
 
-        const result = await connection.execute(sql, binds, { autoCommit: true });
+        const result = await connection.execute(sql, binds, {autoCommit: true});
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch((err) => {
         console.error('insertContains error', err);
         throw err; // let controller handle it
     });
 }
+
+// updatePeople 
+async function updatePeople({email, newNetWorth, newCash}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            UPDATE People
+            SET Networth = :newNetWorth,
+                Cash = :newCash
+            WHERE Email = :email`; 
+
+        const binds = {email, newNetWorth, newCash};
+        const result = await connection.execute(sql, binds, {autoCommit: true}); 
+        return result.rowsAffected && result.rowsAffected > 0; 
+    }).catch((err) => {
+        console.error('updatePeople error', err);
+        throw err; // ... 
+    })
+
+}
+//  updateAssets 
+async function updateAssets({ticker, exchange, activeStatus, priceUpdate}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            UPDATE Assets
+            SET Exchange = :exchange,
+                IsActive = :activeStatus,
+                CurrentPrice = :priceUpdate
+            WHERE TickerSymbol = :ticker`; 
+
+        const binds = {ticker, exchange, activeStatus, priceUpdate};
+        const result = await connection.execute(sql, binds, {autoCommit: true}); 
+        return result.rowsAffected && result.rowsAffected > 0; 
+    }).catch((err) => {
+        console.error('updateAssets error', err);
+        throw err; // ... 
+    })
+}
+// deletePeople (by email)
+async function deletePeople({email}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            DELETE FROM People
+            WHERE Email = :email`;
+        
+        const binds = {email}; 
+        const result = await connection.execute(sql, binds, {autoCommit: true}); 
+        return result.rowsAffected && result.rowsAffected > 0; 
+    }).catch((err) => {
+        console.error('deletePeople error', err);
+        throw err; // ... 
+    })
+}
+
+// deletePortfolio (by created date)
+async function deletePortfolio({createdDate}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            DELETE FROM Portfolio
+            WHERE CreatedDate = TO_DATE(:createdDate, 'YYYY-MM-DD')`;  
+        
+        const binds = {createdDate};
+        const result = await connection.execute(sql, binds, {autoCommit: true});
+        return result.rowsAffected && result.rowsAffected > 0; 
+    }).catch((err) => {
+        console.error('deletePortfolio error', err);
+        throw err; // ... 
+    })
+}
+
+// joinHoldings (email) 
+
+async function joinHoldings({email}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            SELECT
+                p.Email,
+                p.Name,
+                p.Networth,
+                c.TickerSymbol,
+                c.Quantity,
+                a.CurrentPrice,
+                a.Name AS AssetName,
+                (c.Quantity * a.CurrentPrice) AS MarketValue,
+                (c.Quantity * (a.CurrentPrice - a.PurchasePrice)) AS ProfitAndLoss -- pnl calculated based on purchase price, not last price 
+            FROM People p
+            JOIN Contains c ON c.Email = p.Email
+            JOIN Assets a ON a.TickerSymbol = c.TickerSymbol
+            WHERE p.Email = :email`;
+
+        const binds = {email};
+        const result = await connection.execute(sql, binds, {autoCommit: true});
+        return result.rows; 
+
+    }).catch((err) => {
+        console.error('joinHoldings error', err);
+        throw err; // ... 
+    })
+}
+
+// joinInvestors (company id)
+
+async function joinInvestors({companyId}) { 
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            SELECT
+                c.CompanyID,
+                c.FoundedDate,
+                c.IsPublic,
+                c.EmployeeCount,
+                p.Email,
+                p.Name,
+                p.PhoneNumber,
+                p.Networth,
+                p.Cash,
+                o.Percentage
+            FROM Companies c
+            JOIN Owns o
+                ON o.CompanyID = c.CompanyID
+            JOIN People p
+                ON p.Email = o.Email
+            WHERE c.CompanyID = :companyId`;
+        
+        const binds = {companyId};
+        const result = await connection.execute(sql, binds, {autoCommit: true});
+        return result.rows;
+
+    }).catch((err) => {
+        console.error('joinInvestors error', err);
+        throw err; 
+    })
+}
+
+// epsGreaterThan (threshold) 
+async function epsGreaterThan({threshold}) {
+    return await withOracleDB(async (connection) => {
+        const sql = `
+            SELECT
+                Sector,
+                AVG(EarningsPerShare) AS AvgEPS
+            FROM
+                Stocks
+            GROUP BY
+                Sector
+            HAVING
+                AVG(EarningsPerShare) > :threshold`;
+
+    const binds = {threshold};
+    const result = await connection.execute(sql, binds, {autoCommit: true});
+    return result.rows;
+
+    }).catch((err) => {
+        console.error('epsGreaterThan error', err);
+        throw err; 
+    })
+} 
 
 module.exports = {
     testOracleConnection,
@@ -173,5 +328,13 @@ module.exports = {
     updateNameDemotable, 
     countDemotable,
     insertContains,
+    updatePeople,
+    updateAssets,
+    deletePeople,
+    deletePortfolio,
+    joinHoldings, 
+    joinInvestors, 
+    epsGreaterThan,
     withOracleDB
 };
+

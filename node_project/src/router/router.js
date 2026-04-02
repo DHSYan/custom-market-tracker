@@ -3,7 +3,12 @@ const appService = require('../../appService.js');
 
 const router = express.Router();
 
-const controller = require("../controller/controller.js");
+const featureOne = require("../controller/controller.js");
+const featureTwo = require("../controller/feature-update.js");
+const featureThree = require("../controller/feature-delete.js");
+const featureSix = require ("../controller/feature-join.js"); 
+const featureEight = require("../controller/feature-having.js");
+const persist = require("../persist/persist.js");
 const { autoCommit } = require('oracledb');
 
 // ----------------------------------------------------------
@@ -70,10 +75,19 @@ router.get('/count-demotable', async (req, res) => {
 // INSERT (refactored logic)
 // Feature 1
 router.put('/people/:email/portfolio/assets', async (req, res) => {
-    return controller.addStockToPortfolioRequest(req, res);
+    return featureOne.addStockToPortfolioRequest(req, res);
 });
 
 // Feature 4 
+// UPDATE PEOPLE
+router.put('people/:email', async (req, res) => {
+   return featureTwo.updatePersonPortfolioRequest(req, res); 
+}); 
+
+// UPDATE ASSETS 
+router.put('/assets/:tickerSymbol', async (req, res) => {
+   return featureTwo.updateAssetRequest(req, res); 
+}); 
 router.post("/filter/assets", async (req, res) => {
   // filter here is going to be an array of propositional statemnets
   // { column: "name", operator: "=", value: "target" }
@@ -118,5 +132,30 @@ router.post("/filter/assets", async (req, res) => {
   return res.status(200).json({ success: true, result: result });
 })
 
+
+// DELETE PEOPLE
+router.delete('/people/:email', async (req, res) => {
+    return featureThree.deletePersonRequest(req, res); 
+});
+
+// DELETE PORTFOLIO
+router.delete('/portfolios/:createdDate', async (req, res) => {
+    return featureThree.deletePortfolioRequest(req, res); 
+});
+
+// JOIN (trader holdings view) 
+router.get('/holdings/:email', async (req, res) => {
+    return featureSix.joinPeopleContainsAssetRequest(req, res);
+});
+
+// JOIN (News impact rows)
+router.get('/news-impact/:companyId', async (req, res) => {
+    return featureSix.joinOwnsPeopleCompanyRequest(req, res);
+});
+
+// HAVING (EPS greater than threshold) 
+router.get('/companies/eps-greater-than', async (req, res) => {
+    return featureEight.epsGreaterThanRequest(req, res);
+});
 
 module.exports = router;
