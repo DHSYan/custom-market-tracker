@@ -170,7 +170,7 @@ router.post("/market-summary-by-exchange", async (req, res) => {
 })
 
 // feature 9
-router.post("/market-summary-by-exchange", async (req, res) => {
+router.post("/find-the-best", async (req, res) => {
     return featureSeven.findTheBest(req, res);
 })
 
