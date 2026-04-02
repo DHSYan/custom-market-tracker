@@ -5,80 +5,225 @@
     <!-- This meta tag ensures that the website renders correctly across different device sizes, enhancing mobile responsiveness. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Link to the external CSS stylesheet. Uncomment if you wish to customize or add styling. -->
-    <!-- <link rel="stylesheet" href="styles.css">   -->
+    <!-- link for the external CSS stylesheet -->
+    <link rel="stylesheet" href="styles.css">
 
-    <title>Database Application</title>
+    <title>Finance DB Project</title>
 </head>
 <body>
-    <!-- ===================================================================================== -->
-    <!-- Display the current status of the database connection. 
-         !!HERE TO HELP U DEBUGGING, NOT REQUIRED IN YOUR OWN PROJECT!!
-         -->
-    <h1>Database Connection Status YAY: 
-        <!-- An in-line placeholder to display connection status. -->
-        <span id="dbStatus"> </span>
-        <!-- A loading GIF, will be hided once get the status. -->
-        <img id="loadingGif" class="loading-gif" src="loading_100px.gif" alt="Loading...">
-    </h1>
+    <h1>Finance Database Manager</h1>
+    
+    <!-- shows DB status with gif -->
+    <div class="status-panel">
+        <p>Database connection: <span id="dbStatus"></span>
+        <img id="loadingGif" class="loading-gif" src="loading_100px.gif" alt="Loading..."></p>
+    </div>
 
-    <br><hr><br> <!-- ========================================================================= -->
+    <!-- tab navigation -->
+    <div class="tab-nav">
+        <button class="tab-button active" onclick="openTab(event, 'tab-people')">Manage People</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-buy')">Buy Asset</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-search')">Search Assets</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-reports')">Asset Reports</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-join')">Trader Holdings</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-group')">Market Summary</button>
+    </div>
 
-    <!-- Show 'Demotable'. 
-        Data will be fetched and inserted here dynamically using JavaScript. -->
-    <h2>Show Demotable</h2>
-    <table id="demotable" border="1">
-        <thead>
-            <tr>
-                <!--Table head, need to be adjusted accordingly to align with your own.-->
-                <th>ID</th>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <!-- query 2,3: managing people -->
+    <div id="tab-people" class="tab-content" style="display: block;">
+    <div class="section-box">
+        <h2>Manage People</h2>
 
-    <br><hr><br> <!-- ========================================================================= -->
+        <!-- add a new person -->
+        <h3>Add a New Person</h3>
+        <form id="insertPersonForm">
+            Email: <input type="email" id="insEmail" placeholder="user@demo.com" required><br>
+            Name: <input type="text" id="insName" placeholder="Demo Name"><br>
+            Networth: <input type="number" id="insNet" placeholder="0.00"><br>
+            Cash: <input type="number" id="insCash" placeholder="0.00"><br>
+            Phone Number: <input type="text" id="insPhone" placeholder="604-456-7000"><br>
+            <button type="submit" class="button-style">Add Person</button>
+        </form>
+        <p id="insMsg" class="message"></p>
+        <hr>
 
-    <h2>Reset Demotable</h2>
-    <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
-    <button id="resetDemotable"> reset </button> <br>
-    <!-- A placeholder to display messages related to the reset operation. -->
-    <div id="resetResultMsg"></div>
+        <!-- 2. update: update an existing person -->
+        <h3>Change Person Information</h3>
+        <form id="updatePersonForm">
+            Email to update: <input type="email" id="updEmail" placeholder="Email to change data" required><br>
+            New Networth: <input type="number" id="updNet"><br>
+            New Cash: <input type="number" id="updCash"><br>
+            New Phone Number: <input type="text" id="updPhone"><br>
+            <button type="submit" class="button-style">Update Person</button>
+        </form>
+        <p id="updMsg" class="message"></p>
+        <hr>
+        
+        <!-- 3. delete: delete a person -->
+        <h3>Remove a Person</h3>
+        <form id="deletePersonForm">
+            Email to remove: <input type="email" id="delEmail" placeholder="Email to delete data" required><br>
+            <button type="submit" class="button-style">Delete Person</button>
+        </form>
+        <p id="delMsg" class="message"></p>
+        <hr>
 
-    <br><hr><br> <!-- ========================================================================= -->
+        <!-- visual table for the display -->
+        <h3>Current People in Database</h3>
+        <table id="peopleTable">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Networth</th>
+                    <th>Cash</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
 
-    <h2> Insert Values into DemoTable </h2>
-    <form id="insertDemotable">
-        ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>
-        Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>
+    <!-- query 1. insert: buying assets -->
+    <div id="tab-buy" class="tab-content">
+    <div class="section-box">
+        <h2>Buy Asset</h2>
+        <p>Purchase assets with an email:</p>
+        <form id="buyAssetForm">
+            Trader Email: <input type="email" id="buyEmail" placeholder="user@demo.com" required><br>
+            Portfolio Date: <input type="date" id="buyDate" required><br>
+            Ticker Symbol: <input type="text" id="buyTicker" placeholder="AAPL" required><br>
+            Quantity: <input type="number" id="buyQty" required><br>
+            Purchase Price: <input type="number" id="buyPrice" required><br>
+            <button type="submit" class="button-style">Buy Asset</button>
+        </form>
+        <p id="buyMsg" class="message"></p>
+    </div>
+    </div>
 
-        <button type="submit"> insert </button> <br>
-    </form>
-    <div id="insertResultMsg"></div>
+    <!-- query 4. selection: filter search with and/or -->
+    <div id="tab-search" class="tab-content">
+        <div class="section-box">
+        <h2>Search Assets</h2>
+        <p>Filter assets by Exchange, Currency, or both:</p>
+        <form id="searchAssetsForm">
+            <select id="selCol1">
+                <option value="Exchange">Exchange</option>
+                <option value="Currency">Currency</option>
+            </select>
+            <input type="text" id="selVal1" placeholder="NASDAQ" required>
+            <select id="selLogic">
+                <option value="AND">AND</option>
+                <option value="OR">OR</option>
+            </select>
+            <select id="selCol2">
+                <option value="Currency">Currency</option>
+                <option value="Exchange">Exchange</option>
+            </select>
+            <input type="text" id="selVal2" placeholder="USD" required>
+            <button type="submit" class="button-style">Search</button>
+        </form>
+        <p id="searchMsg" class="message"></p>
 
-    <br><hr><br> <!-- ========================================================================= -->
+        <!-- visual table for the display -->
+        <h3>Results Display</h3>
+        <table id="searchResultsTable">
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Exchange</th>
+                    <th>Currency</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
 
-    <h2>Update Name in DemoTable</h2>
-    <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
-    <form id="updataNameDemotable">
-        Old Name: <input type="text" id="updateOldName" placeholder="Enter Old Name" required> <br><br>
-        New Name: <input type="text" id="updateNewName" placeholder="Enter New Name" maxlength="20"> <br><br>
+    <!-- query 5. projection: report generator with multiselect columns -->
+    <div id="tab-reports" class="tab-content">
+    <div class="section-box">
+        <h2>Asset Report Builder</h2>
+        <p>Select the columns you want to include in your report:</p>
+        <form id="assetReportForm">
+            <input type="checkbox" name="columns" value="TickerSymbol"> Ticker
+            <input type="checkbox" name="columns" value="Name"> Name
+            <input type="checkbox" name="columns" value="Exchange"> Exchange
+            <input type="checkbox" name="columns" value="Currency"> Currency
+            <input type="checkbox" name="columns" value="Sector"> Sector
+            <br><br>
+            <button type="submit" class="button-style">Generate Report</button>
+        </form>
+        <p id="reportMsg" class="message"></p>
 
-        <button type="submit"> update </button> <br>
-    </form>
-    <!-- A placeholder to display messages related to the update operation. -->
-    <div id="updateNameResultMsg"></div>
+        <!-- visual table for the display -->
+        <table id="reportTable">
+            <thead>
+                <tr id="reportHeader">  
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
 
-    <br><hr><br> <!-- ========================================================================= -->
+    <!-- query 6. join: see multiple tables worth of information from joining -->
+    <div id="tab-join" class="tab-content">
+    <div class="section-box">
+        <h2>Trader Holdings View</h2>
+        <p>Enter a trader's email to see details for their current portfolio holdings and assets:</p>
+        <form id="joinForm">
+            Trader Email: <input type="email" id="joinEmail" placeholder="user@demo.com" required>
+            <button type="submit" class="button-style">View Holdings</button>
+        </form>
+        <p id="joinMsg" class="message"></p>
 
-    <h2>Count the Tuples in DemoTable</h2>
-    <button id="countDemotable"> count </button> <br><br>
-    <!-- A placeholder to display the count result. -->
-    <div id="countResultMsg"></div> <br>
+        <!-- visual table for the display -->
+        <h3>Results Display</h3>
+        <table id="joinTable">
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Asset Name</th>
+                    <th>Quantity</th>
+                    <th>Purchase Price</th>
+                    <th>Currency</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
 
-    <!-- ===================================================================================== -->
+    <!-- query 7. group by: aggregates summary stats for market -->
+    <div id="tab-group" class="tab-content">
+    <div class="section-box">
+        <h2>Market Summary by Exchange</h2>
+        <p>View the total number of assets and average prices for each stock exchange:</p>
+        <button id="buttonGroup" class="button-style">Generate Summary</button>
+        <p id="groupMsg"></p>
+
+        <!-- visual table for the display -->
+        <h3>Results Display</h3>
+        <table id="groupTable">
+            <thead>
+                <tr>
+                    <th>Exchange</th>
+                    <th>Total Assets</th>
+                    <th>Average Price</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
+
     <!-- External JavaScript file that contains the functionality/logic for the operations above. -->
     <script src="scripts.js"></script>
 </body>
