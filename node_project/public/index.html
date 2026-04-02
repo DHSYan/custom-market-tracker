@@ -22,6 +22,7 @@
     <!-- tab navigation -->
     <div class="tab-nav">
         <button class="tab-button active" onclick="openTab(event, 'tab-people')">Manage People</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-buy')">Buy Asset</button>
     </div>
 
     <!-- query 2,3: managing people -->
@@ -78,6 +79,23 @@
             <tbody>
             </tbody>
         </table>
+    </div>
+    </div>
+
+    <!-- query 1. insert: buying assets -->
+    <div id="tab-buy" class="tab-content">
+    <div class="section-box">
+        <h2>Buy Asset</h2>
+        <p>Purchase assets with an email:</p>
+        <form id="buyAssetForm">
+            Trader Email: <input type="email" id="buyEmail" placeholder="user@demo.com" required><br>
+            Portfolio Date: <input type="date" id="buyDate" required><br>
+            Ticker Symbol: <input type="text" id="buyTicker" placeholder="AAPL" required><br>
+            Quantity: <input type="number" id="buyQty" required><br>
+            Purchase Price: <input type="number" id="buyPrice" required><br>
+            <button type="submit" class="button-style">Buy Asset</button>
+        </form>
+        <p id="buyMsg" class="message"></p>
     </div>
     </div>
 

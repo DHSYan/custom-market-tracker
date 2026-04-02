@@ -175,6 +175,41 @@ function openTab(event, tabId) {
     event.currentTarget.classList.add("active");
 }
 
+// query 1. insert: inserts a new asset into a portfolio
+async function buyAsset(event) {
+    event.preventDefault();
+
+    const emailValue = document.getElementById('buyEmail').value;
+    const dateValue = document.getElementById('buyDate').value;
+    const tickerValue = document.getElementById('buyTicker').value;
+    const qtyValue = document.getElementById('buyQty').value;
+    const priceValue = document.getElementById('buyPrice').value;
+    const endpointUrl = `/people/${emailValue}/portfolio/assets`;
+
+    const response = await fetch(endpointUrl, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: emailValue,
+            createdDate: dateValue,
+            tickerSymbol: tickerValue,
+            quantity: qtyValue,
+            purchasePrice: priceValue
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('buyMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Asset purchased successfully!";
+    } else {
+        messageElement.textContent = "Failed to buy asset.";
+    }
+}
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -184,6 +219,7 @@ window.onload = function() {
     document.getElementById("insertPersonForm").addEventListener("submit", insertPerson);
     document.getElementById("updatePersonForm").addEventListener("submit", updatePerson);
     document.getElementById("deletePersonForm").addEventListener("submit", deletePerson);
+    document.getElementById("buyAssetForm").addEventListener("submit", buyAsset);
 };
 
 // General function to refresh the displayed table data. 
