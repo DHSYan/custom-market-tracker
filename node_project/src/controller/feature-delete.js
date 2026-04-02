@@ -16,7 +16,7 @@ async function deletePersonRequest(req, res) {
             email: effectiveEmail,
         });
 
-        if (result) return res.status(201).json({ success: true });
+        if (result) return res.status(200).json({ success: true, data: result });
         return res.status(500).json({ success: false, error: 'Update failed' });
         
     } catch (err) {
@@ -38,7 +38,7 @@ async function deletePortfolioRequest(req, res) {
             createdDate: effectiveDate,
         });
 
-        if (result) return res.status(201).json({ success: true });
+        if (result) return res.status(200).json({ success: true, data: result });
         return res.status(500).json({ success: false, error: 'Update failed' });
         
     } catch (err) {

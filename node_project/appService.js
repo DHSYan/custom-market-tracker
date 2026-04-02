@@ -146,8 +146,7 @@ async function insertContains({ email, createdDate, tickerSymbol, quantity, purc
     return await withOracleDB(async (connection) => {
         const sql = `
             INSERT INTO Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
-            VALUES (:email, TO_DATE(:createdDate, 'YYYY-MM-DD'), :tickerSymbol, :quantity, :purchasePrice)
-        `;
+            VALUES (:email, TO_DATE(:createdDate, 'YYYY-MM-DD'), :tickerSymbol, :quantity, :purchasePrice)`;
 
         const binds = {
             email,
@@ -166,15 +165,16 @@ async function insertContains({ email, createdDate, tickerSymbol, quantity, purc
 }
 
 // updatePeople 
-async function updatePeople({email, newNetWorth, newCash}) {
+async function updatePeople({email, newNetWorth, newCash, newPhone}) {
     return await withOracleDB(async (connection) => {
         const sql = `
             UPDATE People
             SET Networth = :newNetWorth,
-                Cash = :newCash
+                Cash = :newCash,
+                PhoneNumber = :newPhone
             WHERE Email = :email`; 
 
-        const binds = {email, newNetWorth, newCash};
+        const binds = {email, newNetWorth, newCash, newPhone};
         const result = await connection.execute(sql, binds, {autoCommit: true}); 
         return result.rowsAffected && result.rowsAffected > 0; 
     }).catch((err) => {
@@ -247,7 +247,7 @@ async function joinHoldings({email}) {
                 a.CurrentPrice,
                 a.Name AS AssetName,
                 (c.Quantity * a.CurrentPrice) AS MarketValue,
-                (c.Quantity * (a.CurrentPrice - a.PurchasePrice)) AS ProfitAndLoss -- pnl calculated based on purchase price, not last price 
+                (c.Quantity * (a.CurrentPrice - c.PurchasePrice)) AS ProfitAndLoss -- pnl calculated based on purchase price, not last price 
             FROM People p
             JOIN Contains c ON c.Email = p.Email
             JOIN Assets a ON a.TickerSymbol = c.TickerSymbol

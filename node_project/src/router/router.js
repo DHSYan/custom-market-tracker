@@ -8,9 +8,10 @@ const featureTwo = require("../controller/feature-update.js");
 const featureThree = require("../controller/feature-delete.js");
 const featureSix = require ("../controller/feature-join.js"); 
 const featureEight = require("../controller/feature-having.js");
+const { autoCommit } = require('oracledb');
 const featureFive = require("../controller/feature-projection.js");
 const featureSeven = require("../controller/feature-seven.js");
-// const { autoCommit } = require('oracledb');
+
 
 // ----------------------------------------------------------
 // API endpoints
@@ -81,7 +82,7 @@ router.put('/people/:email/portfolio/assets', async (req, res) => {
 
 // Feature 4 
 // UPDATE PEOPLE
-router.put('people/:email', async (req, res) => {
+router.put('/people/:email', async (req, res) => {
    return featureTwo.updatePersonPortfolioRequest(req, res); 
 }); 
 
@@ -155,7 +156,7 @@ router.get('/news-impact/:companyId', async (req, res) => {
 
 // HAVING (EPS greater than threshold) 
 router.get('/companies/eps-greater-than', async (req, res) => {
-    return featureEight.epsGreaterThanRequest(req, res);
+    return featureEight.havingEPSGreaterThanRequest(req, res);
 });
 
 

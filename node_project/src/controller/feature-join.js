@@ -3,19 +3,17 @@
 // controllers
 // Input: email 
 async function joinPeopleContainsAssetRequest(req, res) {
-    const urlEmail = req.params?.email;
+    const email = req.params?.email;
 
-    const effectiveEmail = email || urlEmail; 
-
-    if (!effectiveEmail) return res.status(400).json({ success: false, error: 'Missing or invalid required fields' });
+    if (!email) return res.status(400).json({ success: false, error: 'Missing or invalid required fields' });
     
     try { 
         const {joinHoldings} = require('../../appService.js');
         const result = await joinHoldings({
-            email: effectiveEmail,
+            email: email,
         });
 
-        if (result) return res.status(201).json({ success: true });
+        if (result) return res.status(201).json({ success: true, data: result });
         return res.status(500).json({ success: false, error: 'Update failed' });
         
     } catch (err) {
@@ -27,17 +25,16 @@ async function joinPeopleContainsAssetRequest(req, res) {
 // Input: company id 
 async function joinOwnsPeopleCompanyRequest(req, res) {
     const compID = req.params?.companyId;
-    const effectiveCompanyId = companyId || compID; 
 
-    if (!effectiveCompanyId) return res.status(400).json({ success: false, error: 'Missing or invalid required fields' });
+    if (!compID) return res.status(400).json({ success: false, error: 'Missing or invalid required fields' });
 
     try { 
         const {joinInvestors} = require('../../appService.js');
         const result = await joinInvestors({
-            companyId: effectiveCompanyId,
+            companyId: compID,
         });
 
-        if (result) return res.status(201).json({ success: true });
+        if (result) return res.status(201).json({ success: true, data: result });
         return res.status(500).json({ success: false, error: 'Update failed' });
         
     } catch (err) {

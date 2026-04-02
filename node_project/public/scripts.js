@@ -62,103 +62,6 @@ async function fetchAndDisplayPeople() {
     });
 }
 
-// inserts new records into the people table
-async function insertPerson(event) {
-    event.preventDefault();
-
-    const emailValue = document.getElementById('insEmail').value;
-    const nameValue = document.getElementById('insName').value;
-    const networthValue = document.getElementById('insNet').value;
-    const cashValue = document.getElementById('insCash').value;
-    const phoneValue = document.getElementById('insPhone').value;
-
-    const response = await fetch('/insert-person', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: emailValue,
-            name: nameValue,
-            networth: networthValue,
-            cash: cashValue,
-            phone: phoneValue
-        })
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('insMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Data inserted successfully!";
-        fetchTableData();
-    } else {
-        messageElement.textContent = "Error inserting data!";
-    }
-}
-
-// query 2. update: updates names and information in the people table
-async function updatePerson(event) {
-    event.preventDefault();
-
-    const emailValue = document.getElementById('updEmail').value;
-    const networthValue = document.getElementById('updNet').value;
-    const cashValue = document.getElementById('updCash').value;
-    const phoneValue = document.getElementById('updPhone').value;
-
-    const response = await fetch('/update-person', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: emailValue,
-            networth: networthValue,
-            cash: cashValue,
-            phone: phoneValue
-        })
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('updMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Person updated successfully!";
-        fetchTableData();
-    } else {
-        messageElement.textContent = "Error updating data!";
-    }
-}
-
-// query 3. delete: removes records from the people table
-async function deletePerson(event) {
-    event.preventDefault();
-
-    const emailValue = document.getElementById('delEmail').value;
-
-    const response = await fetch('/delete-person', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: emailValue
-        })
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('delMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Person deleted successfully!";
-        fetchTableData();
-    } else {
-        messageElement.textContent = "Error deleting person!";
-    }
-}
-
-// --- End of provided sample code ---
-
 // for tab navigation on each query page
 function openTab(event, tabId) {
     const tabContents = document.querySelectorAll(".tab-content");
@@ -178,25 +81,19 @@ function openTab(event, tabId) {
 // query 1. insert: inserts a new asset into a portfolio
 async function buyAsset(event) {
     event.preventDefault();
-
     const emailValue = document.getElementById('buyEmail').value;
-    const dateValue = document.getElementById('buyDate').value;
-    const tickerValue = document.getElementById('buyTicker').value;
-    const qtyValue = document.getElementById('buyQty').value;
-    const priceValue = document.getElementById('buyPrice').value;
-    const endpointUrl = `/people/${emailValue}/portfolio/assets`;
-
-    const response = await fetch(endpointUrl, {
+    
+    const response = await fetch(`/people/${emailValue}/portfolio/assets`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             email: emailValue,
-            createdDate: dateValue,
-            tickerSymbol: tickerValue,
-            quantity: qtyValue,
-            purchasePrice: priceValue
+            createdDate: document.getElementById('buyDate').value,
+            tickerSymbol: document.getElementById('buyTicker').value,
+            quantity: document.getElementById('buyQty').value,
+            purchasePrice: document.getElementById('buyPrice').value
         })
     });
 
@@ -206,7 +103,138 @@ async function buyAsset(event) {
     if (responseData.success) {
         messageElement.textContent = "Asset purchased successfully!";
     } else {
-        messageElement.textContent = "Failed to buy asset.";
+        messageElement.textContent = "Error purchasing asset.";
+    }
+}
+
+// query 1. insert: records a transaction for a person
+async function recordTransaction(event) {
+    event.preventDefault();
+    const emailValue = document.getElementById('txEmail').value;
+    
+    const response = await fetch(`/people/${emailValue}/portfolio/assets`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: emailValue,
+            createdDate: document.getElementById('txDate').value,
+            tickerSymbol: document.getElementById('txTicker').value,
+            quantity: document.getElementById('txQty').value,
+            purchasePrice: document.getElementById('txPrice').value
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('txMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Transaction recorded successfully!";
+    } else {
+        messageElement.textContent = "Error recording transaction.";
+    }
+}
+
+// query 2. update: updates names and information in the people table
+async function updatePerson(event) {
+    event.preventDefault();
+    const emailValue = document.getElementById('updEmail').value;
+    
+    const response = await fetch(`/people/${emailValue}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: emailValue,
+            newNetWorth: document.getElementById('updNet').value,
+            newCash: document.getElementById('updCash').value,
+            newPhone: document.getElementById('updPhone').value
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('updPersonMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Person updated successfully!";
+    } else {
+        messageElement.textContent = "Error updating person.";
+    }
+}
+
+// query 2. update: updates asset for maintenance
+async function updateAsset(event) {
+    event.preventDefault();
+    const tickerValue = document.getElementById('updTicker').value;
+    
+    const response = await fetch(`/assets/${tickerValue}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            ticker: tickerValue,
+            exchange: document.getElementById('updExchange').value,
+            activeStatus: parseInt(document.getElementById('updStatus').value), 
+            priceUpdate: document.getElementById('updPrice').value
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('updAssetMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Asset updated successfully!";
+    } else {
+        messageElement.textContent = "Error updating asset.";
+    }
+}
+
+// query 3. delete: removes records from the people table
+async function deletePerson(event) {
+    event.preventDefault();
+    const emailValue = document.getElementById('delEmail').value;
+    
+    const response = await fetch(`/people/${emailValue}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: emailValue })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('delPersonMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Person deleted successfully!";
+    } else {
+        messageElement.textContent = "Error deleting person.";
+    }
+}
+
+// query 3. delete: removes portfolio from creation date
+async function deletePortfolio(event) {
+    event.preventDefault();
+    const dateValue = document.getElementById('delDate').value;
+    
+    const response = await fetch(`/portfolios/${dateValue}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ createdDate: dateValue })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('delPortfolioMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Portfolio deleted successfully!";
+    } else {
+        messageElement.textContent = "Error deleting portfolio.";
     }
 }
 
@@ -319,17 +347,17 @@ async function generateAssetReport(event) {
 }
 
 // query 6. join: joins trader holdings into one table before viewing
-async function viewHoldings(event) {
+async function viewTraderHoldings(event) {
     event.preventDefault();
     const emailValue = document.getElementById('joinEmail').value;
     
-    const response = await fetch(`/trader-holdings?email=${encodeURIComponent(emailValue)}`, {
+    const response = await fetch(`/holdings/${emailValue}`, {
         method: 'GET'
     });
 
     const responseData = await response.json();
-    const messageElement = document.getElementById('joinMsg');
-    const tableElement = document.getElementById('joinTable');
+    const messageElement = document.getElementById('joinHoldingsMsg');
+    const tableElement = document.getElementById('holdingsTable');
     const tableBody = tableElement.querySelector('tbody');
 
     if (tableBody) {
@@ -337,17 +365,48 @@ async function viewHoldings(event) {
     }
 
     if (responseData.success) {
-        messageElement.textContent = "Displaying holdings:";
-
+        messageElement.textContent = "Displaying trader holdings.";
         responseData.data.forEach(row => {
             const tr = tableBody.insertRow();
-            row.forEach((field, index) => {
-                const td = tr.insertCell(index);
+            row.forEach(field => {
+                const td = tr.insertCell();
                 td.textContent = field;
             });
         });
     } else {
-        messageElement.textContent = "Could not find holdings.";
+        messageElement.textContent = "Error fetching holdings.";
+    }
+}
+
+// query 6. join: view company investors of a given companyID
+async function viewCompanyInvestors(event) {
+    event.preventDefault();
+    const compIdValue = document.getElementById('joinCompId').value;
+    
+    const response = await fetch(`/news-impact/${compIdValue}`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('joinInvestorsMsg');
+    const tableElement = document.getElementById('investorsTable');
+    const tableBody = tableElement.querySelector('tbody');
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    if (responseData.success) {
+        messageElement.textContent = "Displaying company investors.";
+        responseData.data.forEach(row => {
+            const tr = tableBody.insertRow();
+            row.forEach(field => {
+                const td = tr.insertCell();
+                td.textContent = field;
+            });
+        });
+    } else {
+        messageElement.textContent = "Error fetching investors.";
     }
 }
 
@@ -381,20 +440,56 @@ async function fetchMarketSummary() {
     }
 }
 
+// query 8. having: filter exchanges based on average price performance 
+async function filterCompaniesByEPS(event) {
+    event.preventDefault();
+    const thresholdValue = document.getElementById('epsThreshold').value;
+    
+    const response = await fetch(`/companies/eps-greater-than?threshold=${thresholdValue}`, {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('epsMsg');
+    const tableElement = document.getElementById('epsTable');
+    const tableBody = tableElement.querySelector('tbody');
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    if (responseData.success) {
+        messageElement.textContent = "Displaying high EPS companies.";
+        responseData.data.forEach(row => {
+            const tr = tableBody.insertRow();
+            row.forEach(field => {
+                const td = tr.insertCell();
+                td.textContent = field;
+            });
+        });
+    } else {
+        messageElement.textContent = "Error fetching companies.";
+    }
+}
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
     checkDbConnection();
     fetchTableData();
-    document.getElementById("insertPersonForm").addEventListener("submit", insertPerson);
-    document.getElementById("updatePersonForm").addEventListener("submit", updatePerson);
-    document.getElementById("deletePersonForm").addEventListener("submit", deletePerson);
     document.getElementById("buyAssetForm").addEventListener("submit", buyAsset);
+    document.getElementById("recordTransactionForm").addEventListener("submit", recordTransaction);
+    document.getElementById("updatePersonForm").addEventListener("submit", updatePerson);
+    document.getElementById("updateAssetForm").addEventListener("submit", updateAsset);
+    document.getElementById("deletePersonForm").addEventListener("submit", deletePerson);
+    document.getElementById("deletePortfolioForm").addEventListener("submit", deletePortfolio);
     document.getElementById("searchAssetsForm").addEventListener("submit", searchAssets);
     document.getElementById("assetReportForm").addEventListener("submit", generateAssetReport);
-    document.getElementById("joinForm").addEventListener("submit", viewHoldings);
+    document.getElementById("viewHoldingsForm").addEventListener("submit", viewTraderHoldings);
+    document.getElementById("viewInvestorsForm").addEventListener("submit", viewCompanyInvestors);
     document.getElementById("buttonGroup").addEventListener("click", fetchMarketSummary);
+    document.getElementById("epsFilterForm").addEventListener("submit", filterCompaniesByEPS);
 };
 
 // General function to refresh the displayed table data. 
