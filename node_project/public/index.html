@@ -23,6 +23,7 @@
     <div class="tab-nav">
         <button class="tab-button active" onclick="openTab(event, 'tab-people')">Manage People</button>
         <button class="tab-button" onclick="openTab(event, 'tab-buy')">Buy Asset</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-search')">Search Assets</button>
     </div>
 
     <!-- query 2,3: managing people -->
@@ -96,6 +97,46 @@
             <button type="submit" class="button-style">Buy Asset</button>
         </form>
         <p id="buyMsg" class="message"></p>
+    </div>
+    </div>
+
+    <!-- query 4. selection: filter search with and/or -->
+    <div id="tab-search" class="tab-content">
+        <div class="section-box">
+        <h2>Search Assets</h2>
+        <p>Filter assets by Exchange, Currency, or both:</p>
+        <form id="searchAssetsForm">
+            <select id="selCol1">
+                <option value="Exchange">Exchange</option>
+                <option value="Currency">Currency</option>
+            </select>
+            <input type="text" id="selVal1" placeholder="NASDAQ" required>
+            <select id="selLogic">
+                <option value="AND">AND</option>
+                <option value="OR">OR</option>
+            </select>
+            <select id="selCol2">
+                <option value="Currency">Currency</option>
+                <option value="Exchange">Exchange</option>
+            </select>
+            <input type="text" id="selVal2" placeholder="USD" required>
+            <button type="submit" class="button-style">Search</button>
+        </form>
+        <p id="searchMsg" class="message"></p>
+
+        <!-- visual table for the display -->
+        <h3>Results Display</h3>
+        <table id="searchResultsTable">
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Exchange</th>
+                    <th>Currency</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
     </div>
 

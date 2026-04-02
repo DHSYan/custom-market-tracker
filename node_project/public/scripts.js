@@ -210,6 +210,46 @@ async function buyAsset(event) {
     }
 }
 
+// query 4. selection: filter function for the search with and/or
+async function searchAssets(event) {
+    event.preventDefault();
+
+    const col1 = document.getElementById('selCol1').value;
+    const val1 = document.getElementById('selVal1').value;
+    const logic = document.getElementById('selLogic').value;
+    const col2 = document.getElementById('selCol2').value;
+    const val2 = document.getElementById('selVal2').value;
+
+    const response = await fetch('/search-assets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ col1, val1, logic, col2, val2 })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('searchMsg');
+    const tableElement = document.getElementById('searchResultsTable');
+    const tableBody = tableElement.querySelector('tbody');
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    if (responseData.success) {
+        messageElement.textContent = "Search successful!";
+        
+        responseData.data.forEach(row => {
+            const tr = tableBody.insertRow();
+            row.forEach((field, index) => {
+                const td = tr.insertCell(index);
+                td.textContent = field;
+            });
+        });
+    } else {
+        messageElement.textContent = "Search failed.";
+    }
+}
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -220,6 +260,7 @@ window.onload = function() {
     document.getElementById("updatePersonForm").addEventListener("submit", updatePerson);
     document.getElementById("deletePersonForm").addEventListener("submit", deletePerson);
     document.getElementById("buyAssetForm").addEventListener("submit", buyAsset);
+    document.getElementById("searchAssetsForm").addEventListener("submit", searchAssets);
 };
 
 // General function to refresh the displayed table data. 
