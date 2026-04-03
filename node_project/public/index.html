@@ -154,8 +154,14 @@
             <thead>
                 <tr>
                     <th>Ticker</th>
+                    <th>Name</th>
+                    <th>Last Price</th>
+                    <th>Current Price</th>
                     <th>Exchange</th>
+                    <th>Last Update</th>
+                    <th>Is Active</th>
                     <th>Currency</th>
+                    <th>CreatedDate</th>
                 </tr>
             </thead>
             <tbody>
@@ -217,10 +223,15 @@
         <table id="holdingsTable">
             <thead>
                 <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Networth</th>
                     <th>Ticker</th>
-                    <th>Asset Name</th>
                     <th>Quantity</th>
-                    <th>Purchase Price</th>
+                    <th>Current Price</th>
+                    <th>Asset</th>
+                    <th>Net Value</th>
+                    <th>Profit Since Purchase</th>
                 </tr>
             </thead>
             <tbody>
@@ -278,11 +289,11 @@
     <!-- query 8. having: find exchanges where avg asset price is greater than some user X  -->
     <div id="tab-having" class="tab-content">
     <div class="section-box">
-        <h2>High Earnings Per Share (EPS) Companies </h2>
-        <h3>Filter by Earnings Per Share</h3>
+        <h2>High Earnings Per Share (EPS) Sectors </h2>
+        <p>Filter by Earnings Per Share above the threshold:</p>
         <form id="epsFilterForm">
             EPS Threshold: <input type="number" id="epsThreshold" placeholder="5.00" required><br>
-            <button type="submit" class="button-style">Find Companies</button>
+            <button type="submit" class="button-style">Find Sectors</button>
         </form>
         <p id="epsMsg" class="message"></p>
 
@@ -290,7 +301,7 @@
         <table id="epsTable">
             <thead>
                 <tr>
-                    <th>Company Name</th>
+                    <th>Sectors Name</th>
                     <th>Average EPS</th>
                 </tr>
             </thead>
@@ -350,7 +361,6 @@
         <h2>Market Coverage</h2>
 
         <!-- people who own a stake in every public company -->
-        <h3> Universal Owner Identification</h3>
         <p>Find individuals who own a stake in every public company currently listed in the system.</p>
         <button id="btnUniversalOwners" class="button-style">Identify Universal Owners</button>
         <p id="divOwnersMsg" class="message"></p>
