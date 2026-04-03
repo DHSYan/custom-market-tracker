@@ -202,7 +202,7 @@ router.post("/find-the-best", async (req, res) => {
 
 // feature 10 
 router.get('/division/universal-owners', async (req, res) => {
-  return featureTen.findUniversalOwners(req, res);
+  return featureTen.findPeopleThatTradeEveryCompany(req, res);
 });
 
 

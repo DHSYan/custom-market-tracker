@@ -148,8 +148,8 @@ async function updatePerson(event) {
         },
         body: JSON.stringify({
             email: emailValue,
-            newNetWorth: document.getElementById('updNet').value,
-            newCash: document.getElementById('updCash').value,
+            newNetWorth: parseFloat(document.getElementById('updNet').value),
+            newCash: parseFloat(document.getElementById('updCash').value),
             newPhone: document.getElementById('updPhone').value
         })
     });

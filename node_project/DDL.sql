@@ -39,7 +39,7 @@ CREATE TABLE Traders (
     Email VARCHAR2(100) PRIMARY KEY,
     Performance NUMBER CHECK (Performance BETWEEN 1 AND 10),
     AverageTradeTime NUMBER,
-    FOREIGN KEY (Email) REFERENCES People(Email)
+    FOREIGN KEY (Email) REFERENCES People(Email) ON DELETE CASCADE
 );
 
 CREATE TABLE CEOs (
@@ -47,13 +47,13 @@ CREATE TABLE CEOs (
     InCompanyTime NUMBER,
     PublicConsensus NUMBER CHECK (PublicConsensus BETWEEN 0 AND 100),
     PreviousRoles VARCHAR2(100),
-    FOREIGN KEY (Email) REFERENCES People(Email)
+    FOREIGN KEY (Email) REFERENCES People(Email) ON DELETE CASCADE
 );
 
 CREATE TABLE Reporter (
     Email VARCHAR2(100) PRIMARY KEY,
     PublicConsensus NUMBER CHECK (PublicConsensus BETWEEN 0 AND 100),
-    FOREIGN KEY (Email) REFERENCES People(Email)
+    FOREIGN KEY (Email) REFERENCES People(Email) ON DELETE CASCADE
 );
 
 CREATE TABLE Companies (
@@ -108,8 +108,8 @@ CREATE TABLE Contains (
     Quantity NUMBER,
     PurchasePrice NUMBER,
     PRIMARY KEY (Email, CreatedDate, TickerSymbol),
-    FOREIGN KEY (Email) REFERENCES People(Email),
-    FOREIGN KEY (CreatedDate) REFERENCES Portfolio(CreatedDate),
+    FOREIGN KEY (Email) REFERENCES People(Email) ON DELETE CASCADE,
+    FOREIGN KEY (CreatedDate) REFERENCES Portfolio(CreatedDate) ON DELETE CASCADE,
     FOREIGN KEY (TickerSymbol) REFERENCES Assets(TickerSymbol)
 );
 
@@ -149,8 +149,7 @@ CREATE TABLE People_Has_Portfolio (
     CreatedDate DATE,
     Email VARCHAR2(100),
     PRIMARY KEY (CreatedDate, Email),
-    FOREIGN KEY (CreatedDate) REFERENCES Portfolio(CreatedDate)
-        ON DELETE CASCADE,
+    FOREIGN KEY (CreatedDate) REFERENCES Portfolio(CreatedDate) ON DELETE CASCADE,
     FOREIGN KEY (Email) REFERENCES People(Email)
         ON DELETE CASCADE
 );
@@ -172,7 +171,7 @@ CREATE TABLE Owns (
     CompanyID NUMBER,
     Percentage NUMBER(5,2),
     PRIMARY KEY (Email, CompanyID),
-    FOREIGN KEY (Email) REFERENCES People(Email),
+    FOREIGN KEY (Email) REFERENCES People(Email) ON DELETE CASCADE,
     FOREIGN KEY (CompanyID) REFERENCES Companies(CompanyID)
 );
 

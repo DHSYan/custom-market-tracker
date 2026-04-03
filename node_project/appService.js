@@ -9,7 +9,7 @@ const dbConfig = {
     password: envVariables.ORACLE_PASS,
     connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`,
     poolMin: 1,
-    poolMax: 3,
+    poolMax: 2,
     poolIncrement: 1,
     poolTimeout: 60
 };
@@ -174,8 +174,10 @@ async function updatePeople({email, newNetWorth, newCash, newPhone}) {
                 PhoneNumber = :newPhone
             WHERE Email = :email`; 
 
-        const binds = {email, newNetWorth, newCash, newPhone};
-        const result = await connection.execute(sql, binds, {autoCommit: true}); 
+        const binds = {email: "a@demo.com", newNetWorth, newCash, newPhone};
+        console.log(typeof newNetWorth, typeof newCash, typeof newPhone, typeof email, binds);
+        const result = await connection.execute(sql, binds, {autoCommit: true});
+        console.log(result);
         return result.rowsAffected && result.rowsAffected > 0; 
     }).catch((err) => {
         console.error('updatePeople error', err);
@@ -194,6 +196,7 @@ async function updateAssets({ticker, exchange, activeStatus, priceUpdate}) {
             WHERE TickerSymbol = :ticker`; 
 
         const binds = {ticker, exchange, activeStatus, priceUpdate};
+        console.log("DEBUG BINDS:", binds); // ADD THIS LINE
         const result = await connection.execute(sql, binds, {autoCommit: true}); 
         return result.rowsAffected && result.rowsAffected > 0; 
     }).catch((err) => {
@@ -208,8 +211,12 @@ async function deletePeople({email}) {
             DELETE FROM People
             WHERE Email = :email`;
         
-        const binds = {email}; 
-        const result = await connection.execute(sql, binds, {autoCommit: true}); 
+        const binds = {email};
+        console.log(binds);
+        const testResult = await connection.execute("SELECT * FROM People WHERE LOWER(Email) = LOWER(:email)", { email });
+        console.log('Test SELECT:', testResult.rows);
+        const result = await connection.execute(sql, binds, {autoCommit: true});
+        console.log(result);
         return result.rowsAffected && result.rowsAffected > 0; 
     }).catch((err) => {
         console.error('deletePeople error', err);
@@ -225,7 +232,9 @@ async function deletePortfolio({createdDate}) {
             WHERE CreatedDate = TO_DATE(:createdDate, 'YYYY-MM-DD')`;  
         
         const binds = {createdDate};
+        console.log(binds);
         const result = await connection.execute(sql, binds, {autoCommit: true});
+        console.log(result);
         return result.rowsAffected && result.rowsAffected > 0; 
     }).catch((err) => {
         console.error('deletePortfolio error', err);

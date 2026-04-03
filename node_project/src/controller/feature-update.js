@@ -9,6 +9,7 @@ async function updatePersonPortfolioRequest(req, res) {
 
     const {email, newNetWorth, newCash, newPhone} = req.body; 
     const effectiveEmail = email || urlEmail; 
+    console.log('Update request:', { email, newNetWorth, newCash, newPhone, effectiveEmail });
 
     if (!effectiveEmail || isNaN(newNetWorth) || isNaN(newCash) || !newPhone) {
         return res.status(400).json({ success: false, error: 'Missing or invalid required fields' });
@@ -22,6 +23,8 @@ async function updatePersonPortfolioRequest(req, res) {
             newCash,
             newPhone
         });
+        console.log('Update result:', result);
+
 
         if (result) return res.status(201).json({ success: true });
         return res.status(500).json({ success: false, error: 'Update failed' });

@@ -62,7 +62,7 @@ values (DATE '2026-02-15', 'd@demo.com');
 insert into People_Has_Portfolio (CreatedDate, Email)
 values (DATE '2026-03-01', 'e@demo.com');
 
--- Now you can safely insert into Contains
+-- safe insert into Contains
 insert into Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
 values ('a@demo.com', DATE '2026-01-01', 'AAPL', 20, 175);
 insert into Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
@@ -73,3 +73,37 @@ insert into Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
 values ('d@demo.com', DATE '2026-02-15', 'SHOP', 30, 75);
 insert into Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
 values ('e@demo.com', DATE '2026-03-01', 'NVDA', 5, 820);
+
+-- Companies
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (101, DATE '1976-04-01', 1, 160000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (102, DATE '1975-04-04', 1, 220000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (103, DATE '2003-07-01', 1, 140000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (104, DATE '2006-09-01', 1, 12000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (105, DATE '1993-04-05', 1, 30000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (106, DATE '1993-05-05', 0, 30000);
+
+-- Owns
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 101, 20);
+insert into Owns (Email, CompanyID, Percentage)
+values ('b@demo.com', 102, 0.75);
+insert into Owns (Email, CompanyID, Percentage)
+values ('c@demo.com', 103, 2.25);
+insert into Owns (Email, CompanyID, Percentage)
+values ('d@demo.com', 104, 0.50);
+insert into Owns (Email, CompanyID, Percentage)
+values ('e@demo.com', 105, 1.10);
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 102, 20);
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 103, 20);
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 104, 20);
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 105, 20);
