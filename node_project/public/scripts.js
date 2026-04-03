@@ -641,6 +641,48 @@ async function findBestPerformance(type) {
         msgEl.textContent = 'Request failed.';
     }
 }
+
+// query 10. division: find traders 
+// Feature 10: Complete owner identification
+async function findUniversalOwners() {
+    const messageElement = document.getElementById('divOwnersMsg');
+    const tableElement = document.getElementById('divOwnersTable');
+    const tableBody = tableElement.querySelector('tbody');
+
+    messageElement.textContent = 'Loading...';
+    tableBody.innerHTML = '';
+
+    try {
+        const response = await fetch('/division/universal-owners', {
+            method: 'GET'
+        });
+        const responseData = await response.json();
+
+        if (!responseData.success) {
+            messageElement.textContent = responseData.error || 'Request failed.';
+            return;
+        }
+
+        const rows = responseData.data || [];
+        if (rows.length === 0) {
+            messageElement.textContent = 'No results found.';
+            return;
+        }
+
+        messageElement.textContent = 'Displaying universal owners.';
+
+        rows.forEach(row => {
+            const tr = tableBody.insertRow();
+            row.forEach(field => {
+                const td = tr.insertCell();
+                td.textContent = field !== null ? field : 'N/A';
+            });
+        });
+    } catch (err) {
+        messageElement.textContent = 'Request failed.';
+    }
+}
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -659,6 +701,7 @@ window.onload = function() {
     document.getElementById("viewInvestorsForm").addEventListener("submit", viewCompanyInvestors);
     document.getElementById("buttonGroup").addEventListener("click", fetchMarketSummary);
     document.getElementById("epsFilterForm").addEventListener("submit", filterCompaniesByEPS);
+    document.getElementById("btnUniversalOwners").addEventListener("click", findUniversalOwners);
     document.getElementById("btnAboveAvgSectors").addEventListener("click", () => findBestPerformance('SECTOR'));
     document.getElementById("btnRegionalTraders").addEventListener("click", () => findBestPerformance('TRADER'));
 };

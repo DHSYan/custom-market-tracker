@@ -193,16 +193,17 @@ router.get('/projection-metadata', async (req, res) => {
 // feature 7 
 router.post("/market-summary-by-exchange", async (req, res) => {
     return featureSeven.marketSummary(req, res);
-})
+});
 
 // feature 9
 router.post("/find-the-best", async (req, res) => {
     return featureNine.findTheBest(req, res);
-})
+});
 
 // feature 10 
-router.get("/find-trades-that-trades-all-company", async (req, res) => {
-  return featureTen.findPeopleThatTradeEveryCompany(_, res);
-})
+router.get('/division/universal-owners', async (req, res) => {
+  return featureTen.findUniversalOwners(req, res);
+});
+
 
 module.exports = router;
