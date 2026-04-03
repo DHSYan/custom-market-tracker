@@ -8,12 +8,11 @@ const featureTwo = require("../controller/feature-update.js");
 const featureThree = require("../controller/feature-delete.js");
 const featureSix = require ("../controller/feature-join.js"); 
 const featureEight = require("../controller/feature-having.js");
-const { autoCommit } = require('oracledb');
 const featureFive = require("../controller/feature-projection.js");
 const featureSeven = require("../controller/feature-seven.js");
 const featureNine = require("../controller/feature-nine.js");
+const featureTen = require("../controller/feature-ten.js");
 
-// const { autoCommit } = require('oracledb');
 
 // ----------------------------------------------------------
 // API endpoints
@@ -177,5 +176,9 @@ router.post("/find-the-best", async (req, res) => {
     return featureNine.findTheBest(req, res);
 })
 
+// feature 10 
+router.get("/find-trades-that-trades-all-company", async (req, res) => {
+  return featureTen.findPeopleThatTradeEveryCompany(_, res);
+})
 
 module.exports = router;
