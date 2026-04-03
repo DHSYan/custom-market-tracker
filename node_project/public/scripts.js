@@ -600,6 +600,47 @@ async function filterCompaniesByEPS(event) {
     }
 }
 
+// query 9. nested aggregation: find the best performing traders and sectors 
+async function findBestPerformance(type) {
+    const isTrader = type.toUpperCase() === 'TRADER';
+    const msgEl = document.getElementById(isTrader ? 'nestedTradersMsg' : 'nestedSectorsMsg');
+    const tableEl = document.getElementById(isTrader ? 'nestedTradersTable' : 'nestedSectorsTable');
+    const tbody = tableEl.querySelector('tbody');
+
+    msgEl.textContent = 'Loading...';
+    tbody.innerHTML = '';
+
+    try {
+        const response = await fetch('/find-the-best', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type })
+        });
+        const responseData = await response.json();
+
+        if (responseData.success) {
+            const rows = responseData.data;
+            if (rows.length === 0) {
+                msgEl.textContent = 'No results found.';
+            } else {
+                msgEl.textContent = '';
+                rows.forEach(row => {
+                    const tr = document.createElement('tr');
+                    row.forEach(cell => {
+                        const td = document.createElement('td');
+                        td.textContent = cell !== null ? cell : 'N/A';
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                });
+            }
+        } else {
+            msgEl.textContent = 'Error: ' + (responseData.error || 'Unknown error');
+        }
+    } catch (err) {
+        msgEl.textContent = 'Request failed.';
+    }
+}
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -618,6 +659,8 @@ window.onload = function() {
     document.getElementById("viewInvestorsForm").addEventListener("submit", viewCompanyInvestors);
     document.getElementById("buttonGroup").addEventListener("click", fetchMarketSummary);
     document.getElementById("epsFilterForm").addEventListener("submit", filterCompaniesByEPS);
+    document.getElementById("btnAboveAvgSectors").addEventListener("click", () => findBestPerformance('SECTOR'));
+    document.getElementById("btnRegionalTraders").addEventListener("click", () => findBestPerformance('TRADER'));
 };
 
 // General function to refresh the displayed table data. 

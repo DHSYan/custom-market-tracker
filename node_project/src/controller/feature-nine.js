@@ -6,7 +6,7 @@ async function findTheBestTrader(req, res) {
 
   await appService.withOracleDB(async (connection) => {
     const result = await connection.execute(query);
-    res.status(200).json({ success: true, result: result.rows });
+    res.status(200).json({ success: true, data: result.rows });
     return
   }).catch(() => {
     res.status(500).json({ success: false, error: "internal error" });
@@ -20,7 +20,7 @@ async function findTheBestSector(req, res) {
 
   await appService.withOracleDB(async (connection) => {
     const result = await connection.execute(query);
-    res.status(200).json({ success: true, result: result.rows });
+    res.status(200).json({ success: true, data: result.rows });
     return
   }).catch(() => {
     res.status(500).json({ success: false, error: "internal error" });
@@ -33,7 +33,12 @@ async function findTheBestSector(req, res) {
   // { type: "Sector" | "Trader" } 
 async function findTheBest(req, res) {
   
-  const { type } = req.body;
+  const { type } = req.body || {};
+
+  if (!type) {
+    res.status(400).json({ success: false, error: "missing type in request body" });
+    return;
+  }
 
   if (type.toUpperCase() === "TRADER") {
     return findTheBestTrader(req, res);
