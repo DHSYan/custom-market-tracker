@@ -29,7 +29,8 @@
         <button class="tab-button" onclick="openTab(event, 'tab-join')">Holdings and News</button>
         <button class="tab-button" onclick="openTab(event, 'tab-group')">Market Summary</button>
         <button class="tab-button" onclick="openTab(event, 'tab-having')">Market Analytics</button>
-
+        <button class="tab-button" onclick="openTab(event, 'tab-nested')">Performance Benchmarks</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-division')">Market Coverage</button>
     </div>
 
     <!-- query 1. insert: inserting records and buying assets -->
@@ -225,7 +226,7 @@
             <tbody>
             </tbody>
         </table>
-        <hr>
+        <hr style="margin-top: 15px;">
 
         <!-- view the investors of a company -->
         <h3>View Company Investors</h3>
@@ -277,7 +278,7 @@
     <!-- query 8. having: find exchanges where avg asset price is greater than some user X  -->
     <div id="tab-having" class="tab-content">
     <div class="section-box">
-        <h2>High Earnings Per Share Companies </h2>
+        <h2>High Earnings Per Share (EPS) Companies </h2>
         <h3>Filter by Earnings Per Share</h3>
         <form id="epsFilterForm">
             EPS Threshold: <input type="number" id="epsThreshold" placeholder="5.00" required><br>
@@ -291,6 +292,115 @@
                 <tr>
                     <th>Company Name</th>
                     <th>Average EPS</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+    <!-- query 9. nested aggregation: find sectors and top traders that are above average -->
+    <div id="tab-nested" class="tab-content">
+    <div class="section-box">
+        <h2>Performance Benchmarks</h2>
+
+        <!-- view the industry sectors that have above average EPS -->
+        <h3>High Performance Sectors</h3>
+        <p>Identify industry sectors where the average Earnings Per Share (EPS) exceeds the global market average.</p>
+        <button id="btnAboveAvgSectors" class="button-style">Analyze Sectors</button>
+        <p id="nestedSectorsMsg" class="message"></p>
+
+        <!-- visual table for the display -->
+        <table id="nestedSectorsTable">
+            <thead>
+                <tr>
+                    <th>Sector Name</th>
+                    <th>Average EPS</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <hr style="margin-top: 15px;">
+
+        <!-- view the regional above average performances against global averages -->
+        <h3>Regional Trader Leaders</h3>
+        <p>Compare regional average performance scores against the global average for all traders.</p>
+        <button id="btnRegionalTraders" class="button-style">Analyze Regional Performance</button>
+        <p id="nestedTradersMsg" class="message"></p>
+
+        <!-- visual table for the display -->
+        <table id="nestedTradersTable">
+            <thead>
+                <tr>
+                    <th>Region/Category</th>
+                    <th>Average Performance Score</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+    <!-- query 10. division: tools that identify entities that satisfy a universal condition across the entire database -->
+    <div id="tab-division" class="tab-content">
+    <div class="section-box">
+        <h2>Market Coverage</h2>
+
+        <!-- people who own a stake in every public company -->
+        <h3> Universal Owner Identification</h3>
+        <p>Find individuals who own a stake in every public company currently listed in the system.</p>
+        <button id="btnUniversalOwners" class="button-style">Identify Universal Owners</button>
+        <p id="divOwnersMsg" class="message"></p>
+
+        <!-- visual table for the display -->
+        <table id="divOwnersTable">
+            <thead>
+                <tr>
+                    <th>Owner Email</th>
+                    <th>Full Name</th>
+                    <th>Net Worth</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <hr style="margin-top: 15px;">
+
+        <!-- traders who done a trader in every sector -->
+        <h3>Universal Traders</h3>
+        <p>List traders who have performed a trade in every available stock sector.</p>
+        <button id="btnUniversalTraders" class="button-style">Identify Universal Traders</button>
+        <p id="divTradersMsg" class="message"></p>
+
+        <!-- visual table for the display -->
+        <table id="divTradersTable">
+            <thead>
+                <tr>
+                    <th>Trader Email</th>
+                    <th>Performance Score</th>
+                    <th>Average Trade Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <hr style="margin-top: 15px;">
+
+        <!-- portfolios that contain all stocks from a chose index -->
+        <h3>Full Coverage Portfolios</h3>
+        <p>Identify portfolios that contain all stocks from a chosen index subset.</p>
+        <button id="btnFullPortfolios" class="button-style">Find Full Portfolios</button>
+        <p id="divPortfoliosMsg" class="message"></p>
+
+        <!-- visual table for the display -->
+        <table id="divPortfoliosTable">
+            <thead>
+                <tr>
+                    <th>Portfolio Date</th>
+                    <th>Owner Email</th>
+                    <th>Total Assets Held</th>
                 </tr>
             </thead>
             <tbody>
