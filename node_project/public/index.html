@@ -26,11 +26,11 @@
         <button class="tab-button" onclick="openTab(event, 'tab-delete')">Records Deletion</button>
         <button class="tab-button" onclick="openTab(event, 'tab-search')">Search Assets</button>
         <button class="tab-button" onclick="openTab(event, 'tab-reports')">Asset Reports</button>
-        <button class="tab-button" onclick="openTab(event, 'tab-join')">Holdings and News</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-join')">Investor Holdings</button>
         <button class="tab-button" onclick="openTab(event, 'tab-group')">Market Summary</button>
-        <button class="tab-button" onclick="openTab(event, 'tab-having')">Market Analytics</button>
-        <button class="tab-button" onclick="openTab(event, 'tab-nested')">Performance Benchmarks</button>
-        <button class="tab-button" onclick="openTab(event, 'tab-division')">Market Coverage</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-having')">Sector Analytics</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-nested')">High Performance</button>
+        <button class="tab-button" onclick="openTab(event, 'tab-division')">Investor Coverage</button>
     </div>
 
     <!-- query 1. insert: inserting records and buying assets -->
@@ -251,9 +251,13 @@
         <table id="investorsTable">
             <thead>
                 <tr>
+                    <th>Company ID</th>
+                    <th>Is Public</th>
+                    <th>Employee Count</th>
                     <th>Investor Email</th>
                     <th>Investor Name</th>
-                    <th>Company Name</th>
+                    <th>Investor Networth</th>
+                    <th>Percentage Ownership</th>
                 </tr>
             </thead>
             <tbody>
@@ -278,6 +282,7 @@
                     <th>Exchange</th>
                     <th>Total Assets</th>
                     <th>Average Price</th>
+                    <th>Change in Average Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -335,9 +340,9 @@
         </table>
         <hr style="margin-top: 15px;">
 
-        <!-- view the regional above average performances against global averages -->
-        <h3>Regional Trader Leaders</h3>
-        <p>Compare regional average performance scores against the global average for all traders.</p>
+        <!-- view the above average performances against global averages -->
+        <h3>Trader Leaders</h3>
+        <p>Identify traders that have above performance scores that exceed the global average for all traders.</p>
         <button id="btnRegionalTraders" class="button-style">Analyze Regional Performance</button>
         <p id="nestedTradersMsg" class="message"></p>
 
@@ -358,7 +363,7 @@
     <!-- query 10. division: tools that identify entities that satisfy a universal condition across the entire database -->
     <div id="tab-division" class="tab-content">
     <div class="section-box">
-        <h2>Market Coverage</h2>
+        <h2>Investor Coverage</h2>
 
         <!-- people who own a stake in every public company -->
         <p>Find individuals who own a stake in every public company currently listed in the system.</p>
@@ -374,48 +379,9 @@
                     <th>Net Worth</th>
                 </tr>
             </thead>
-            <tbody></tbody>
-        </table>
-        <hr style="margin-top: 15px;">
-
-        <!-- traders who done a trader in every sector -->
-        <!-- <h3>Universal Traders</h3>
-        <p>List traders who have performed a trade in every available stock sector.</p>
-        <button id="btnUniversalTraders" class="button-style">Identify Universal Traders</button>
-        <p id="divTradersMsg" class="message"></p> -->
-
-        <!-- visual table for the display -->
-        <!-- <table id="divTradersTable">
-            <thead>
-                <tr>
-                    <th>Trader Email</th>
-                    <th>Performance Score</th>
-                    <th>Average Trade Time</th>
-                </tr>
-            </thead>
             <tbody>
             </tbody>
         </table>
-        <hr style="margin-top: 15px;"> -->
-
-        <!-- portfolios that contain all stocks from a chose index -->
-        <!-- <h3>Full Coverage Portfolios</h3>
-        <p>Identify portfolios that contain all stocks from a chosen index subset.</p>
-        <button id="btnFullPortfolios" class="button-style">Find Full Portfolios</button>
-        <p id="divPortfoliosMsg" class="message"></p> -->
-
-        <!-- visual table for the display -->
-        <!-- <table id="divPortfoliosTable">
-            <thead>
-                <tr>
-                    <th>Portfolio Date</th>
-                    <th>Owner Email</th>
-                    <th>Total Assets Held</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table> -->
     </div>
     </div>
 

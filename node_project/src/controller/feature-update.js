@@ -1,8 +1,6 @@
 
 // FEATURE 2: UPDATE 
 
-// !!!! CHANGE TO ADD PHONE NUMBER UPDATE 
-
 // controllers 
 async function updatePersonPortfolioRequest(req, res) {
     const urlEmail = req.params?.email;

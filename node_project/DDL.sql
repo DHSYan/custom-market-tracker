@@ -1,5 +1,13 @@
-/*  tables  */
+-- DROP TABLES
+BEGIN
+  FOR t IN (SELECT table_name FROM user_tables) LOOP
+    EXECUTE IMMEDIATE 'DROP TABLE ' || t.table_name || ' CASCADE CONSTRAINTS';
+  END LOOP;
+END;
+/
 
+
+-- Tables
 CREATE TABLE Assets (
     TickerSymbol VARCHAR2(10) PRIMARY KEY,
     Name VARCHAR2(100),
@@ -200,3 +208,268 @@ CREATE TABLE Reports (
     FOREIGN KEY (Email) REFERENCES Reporter(Email),
     FOREIGN KEY (EventID) REFERENCES NewsEvents(EventID)
 );
+
+-- INSERT STATEMENTS
+-- Assets
+insert into Assets (TickerSymbol, Name, LastPrice, CurrentPrice, Exchange, LastUpdate, IsActive, Currency, CreatedDate)
+values ('AAPL', 'Apple Inc.', 180.50, 182.10, 'NASDAQ', '2026-03-10 10:00', 1, 'USD', DATE '2020-01-15');
+insert into Assets (TickerSymbol, Name, LastPrice, CurrentPrice, Exchange, LastUpdate, IsActive, Currency, CreatedDate)
+values ('MSFT', 'Microsoft Corp.', 410.20, 412.35, 'NASDAQ', '2026-03-10 10:00', 1, 'USD', DATE '2019-06-20');
+insert into Assets (TickerSymbol, Name, LastPrice, CurrentPrice, Exchange, LastUpdate, IsActive, Currency, CreatedDate)
+values ('TSLA', 'Tesla Inc.', 195.10, 190.75, 'NASDAQ', '2026-03-10 10:00', 1, 'USD', DATE '2021-03-08');
+insert into Assets (TickerSymbol, Name, LastPrice, CurrentPrice, Exchange, LastUpdate, IsActive, Currency, CreatedDate)
+values ('SHOP', 'Shopify Inc.', 78.40, 79.25, 'NYSE', '2026-03-10 10:00', 1, 'CAD', DATE '2020-09-01');
+insert into Assets (TickerSymbol, Name, LastPrice, CurrentPrice, Exchange, LastUpdate, IsActive, Currency, CreatedDate)
+values ('NVDA', 'NVIDIA Corp.', 870.00, 865.50, 'NASDAQ', '2026-03-10 10:00', 1, 'USD', DATE '2018-11-12');
+insert into Assets (TickerSymbol, Name, LastPrice, CurrentPrice, Exchange, LastUpdate, IsActive, Currency, CreatedDate)
+values ('BB', 'BlackBerry Ltd.', 5.00, 4.80, 'NYSE', '2026-03-10 10:00', 0, 'USD', DATE '2010-01-01');
+insert into Assets (TickerSymbol, Name, LastPrice, CurrentPrice, Exchange, LastUpdate, IsActive, Currency, CreatedDate)
+values ('JPM', 'JPMorgan Chase', 190.00, 192.50, 'NYSE', '2026-03-10 10:00', 1, 'USD', DATE '2005-05-15');
+
+-- Stocks
+insert into Stocks (TickerSymbol, Industry, Sector, SharesOutstanding, EarningsPerShare)
+values ('AAPL', 'Electronics', 'Technology', 1000000000, 6.25);
+insert into Stocks (TickerSymbol, Industry, Sector, SharesOutstanding, EarningsPerShare)
+values ('MSFT', 'Software', 'Technology', 2000000000, 11.50);
+insert into Stocks (TickerSymbol, Industry, Sector, SharesOutstanding, EarningsPerShare)
+values ('TSLA', 'Automotive', 'Consumer', 3000000000, 3.10);
+insert into Stocks (TickerSymbol, Industry, Sector, SharesOutstanding, EarningsPerShare)
+values ('SHOP', 'E-Commerce', 'Technology', 4000000000, 0.90);
+insert into Stocks (TickerSymbol, Industry, Sector, SharesOutstanding, EarningsPerShare)
+values ('NVDA', 'Semiconductor', 'Technology', 5000000000, 14.75);
+insert into Stocks (TickerSymbol, Industry, Sector, SharesOutstanding, EarningsPerShare)
+values ('BB', 'Software', 'Technology', 500000000, -0.50);
+insert into Stocks (TickerSymbol, Industry, Sector, SharesOutstanding, EarningsPerShare)
+values ('JPM', 'Banking', 'Finance', 2800000000, 16.20);
+
+-- Portfolio
+insert into Portfolio (CreatedDate, Name, Currency)
+values (DATE '2026-01-01', 'Growth', 'USD');
+insert into Portfolio (CreatedDate, Name, Currency)
+values (DATE '2026-01-15', 'Value Picks', 'USD');
+insert into Portfolio (CreatedDate, Name, Currency)
+values (DATE '2026-02-01', 'Canadian', 'CAD');
+insert into Portfolio (CreatedDate, Name, Currency)
+values (DATE '2026-02-15', 'Volatile', 'USD');
+insert into Portfolio (CreatedDate, Name, Currency)
+values (DATE '2026-03-01', 'Dividends', 'USD');
+
+-- People
+insert into People (Email, PhoneNumber, Networth, Name, Cash)
+values ('a@demo.com', '777-777-7777', 250000.00, 'Alice Test', 15000.00);
+insert into People (Email, PhoneNumber, Networth, Name, Cash)
+values ('b@demo.com', '777-777-7778', 120000.00, 'Bob Tester', 8000.00);
+insert into People (Email, PhoneNumber, Networth, Name, Cash)
+values ('c@demo.com', '777-777-7779', 500000.00, 'Caleb Testerer', 25000.00);
+insert into People (Email, PhoneNumber, Networth, Name, Cash)
+values ('d@demo.com', '777-777-7780', 66666.00, 'Dylan Caleb', 6000.00);
+insert into People (Email, PhoneNumber, Networth, Name, Cash)
+values ('e@demo.com', '777-777-7781', 300000.00, 'Edward Bob', 12000.00);
+
+-- People_Has_Portfolio
+insert into People_Has_Portfolio (CreatedDate, Email)
+values (DATE '2026-01-01', 'a@demo.com');
+insert into People_Has_Portfolio (CreatedDate, Email)
+values (DATE '2026-01-15', 'b@demo.com');
+insert into People_Has_Portfolio (CreatedDate, Email)
+values (DATE '2026-02-01', 'c@demo.com');
+insert into People_Has_Portfolio (CreatedDate, Email)
+values (DATE '2026-02-15', 'd@demo.com');
+insert into People_Has_Portfolio (CreatedDate, Email)
+values (DATE '2026-03-01', 'e@demo.com');
+
+-- safe insert into Contains
+insert into Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
+values ('a@demo.com', DATE '2026-01-01', 'AAPL', 20, 175);
+insert into Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
+values ('a@demo.com', DATE '2026-01-01', 'TSLA', 30, 190);
+insert into Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
+values ('b@demo.com', DATE '2026-01-15', 'MSFT', 10, 395);
+insert into Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
+values ('c@demo.com', DATE '2026-02-01', 'TSLA', 15, 205);
+insert into Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
+values ('d@demo.com', DATE '2026-02-15', 'SHOP', 30, 75);
+insert into Contains (Email, CreatedDate, TickerSymbol, Quantity, PurchasePrice)
+values ('e@demo.com', DATE '2026-03-01', 'NVDA', 5, 820);
+
+-- Companies
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (101, DATE '1976-04-01', 1, 160000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (102, DATE '1975-04-04', 1, 220000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (103, DATE '2003-07-01', 1, 140000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (104, DATE '2006-09-01', 1, 12000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (105, DATE '1993-04-05', 1, 30000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (106, DATE '1993-05-05', 0, 30000);
+insert into Companies (CompanyID, FoundedDate, IsPublic, EmployeeCount)
+values (107, DATE '2000-12-31', 1, 250000);
+
+-- Owns
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 101, 20);
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 102, 20);
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 103, 20);
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 104, 20);
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 105, 20);
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 106, 50.00);
+insert into Owns (Email, CompanyID, Percentage)
+values ('a@demo.com', 107, 10.00);
+insert into Owns (Email, CompanyID, Percentage)
+values ('b@demo.com', 102, 0.75);
+insert into Owns (Email, CompanyID, Percentage)
+values ('c@demo.com', 101, 1.00);
+insert into Owns (Email, CompanyID, Percentage)
+values ('c@demo.com', 102, 1.00);
+insert into Owns (Email, CompanyID, Percentage)
+values ('c@demo.com', 103, 2.25);
+insert into Owns (Email, CompanyID, Percentage)
+values ('c@demo.com', 104, 1.00);
+insert into Owns (Email, CompanyID, Percentage)
+values ('c@demo.com', 105, 1.00);
+insert into Owns (Email, CompanyID, Percentage)
+values ('d@demo.com', 104, 0.50);
+insert into Owns (Email, CompanyID, Percentage)
+values ('e@demo.com', 105, 1.10);
+
+-- Traders
+insert into Traders (Email, Performance, AverageTradeTime)
+values ('a@demo.com', 8, 12);
+insert into Traders (Email, Performance, AverageTradeTime)
+values ('b@demo.com', 5, 25);
+insert into Traders (Email, Performance, AverageTradeTime)
+values ('c@demo.com', 9, 8);
+insert into Traders (Email, Performance, AverageTradeTime)
+values ('d@demo.com', 4, 30);
+insert into Traders (Email, Performance, AverageTradeTime)
+values ('e@demo.com', 7, 15);
+
+-- CEOs
+insert into CEOs (Email, InCompanyTime, PublicConsensus, PreviousRoles)
+values ('a@demo.com', 6, 72, 'CFO');
+insert into CEOs (Email, InCompanyTime, PublicConsensus, PreviousRoles)
+values ('b@demo.com', 3, 55, 'Founder');
+insert into CEOs (Email, InCompanyTime, PublicConsensus, PreviousRoles)
+values ('c@demo.com', 9, 81, 'CEO');
+insert into CEOs (Email, InCompanyTime, PublicConsensus, PreviousRoles)
+values ('d@demo.com', 2, 40, 'Finance Director');
+insert into CEOs (Email, InCompanyTime, PublicConsensus, PreviousRoles)
+values ('e@demo.com', 5, 68, 'Product Manager');
+
+-- Reporter
+insert into Reporter (Email, PublicConsensus)
+values ('a@demo.com', 70);
+insert into Reporter (Email, PublicConsensus)
+values ('b@demo.com', 52);
+insert into Reporter (Email, PublicConsensus)
+values ('c@demo.com', 85);
+insert into Reporter (Email, PublicConsensus)
+values ('d@demo.com', 45);
+insert into Reporter (Email, PublicConsensus)
+values ('e@demo.com', 66);
+
+-- TimeFrame
+insert into TimeFrame (TimeFrameID, Volume, Time_to_time, AverageChange)
+values (1, 5000000, '1D', 2);
+insert into TimeFrame (TimeFrameID, Volume, Time_to_time, AverageChange)
+values (2, 8000000, '1W', -1);
+insert into TimeFrame (TimeFrameID, Volume, Time_to_time, AverageChange)
+values (3, 12000000, '1M', 5);
+insert into TimeFrame (TimeFrameID, Volume, Time_to_time, AverageChange)
+values (4, 3000000, '3M', 7);
+insert into TimeFrame (TimeFrameID, Volume, Time_to_time, AverageChange)
+values (5, 15000000, '1Y', 12);
+
+-- Days
+insert into Days (TimeFrameID, DayOfMonth, DayOfWeek, IsHoliday, Has_Months)
+values (1, 10, 'Mon', 0, 3);
+insert into Days (TimeFrameID, DayOfMonth, DayOfWeek, IsHoliday, Has_Months)
+values (2, 11, 'Tue', 0, 3);
+insert into Days (TimeFrameID, DayOfMonth, DayOfWeek, IsHoliday, Has_Months)
+values (3, 12, 'Wed', 0, 3);
+insert into Days (TimeFrameID, DayOfMonth, DayOfWeek, IsHoliday, Has_Months)
+values (4, 13, 'Thu', 0, 3);
+insert into Days (TimeFrameID, DayOfMonth, DayOfWeek, IsHoliday, Has_Months)
+values (5, 14, 'Fri', 0, 3);
+
+-- Months
+insert into Months (TimeFrameID, MonthOfYear, Has_Years)
+values (1, 3, 2026);
+insert into Months (TimeFrameID, MonthOfYear, Has_Years)
+values (2, 3, 2026);
+insert into Months (TimeFrameID, MonthOfYear, Has_Years)
+values (3, 2, 2026);
+insert into Months (TimeFrameID, MonthOfYear, Has_Years)
+values (4, 1, 2026);
+insert into Months (TimeFrameID, MonthOfYear, Has_Years)
+values (5, 12, 2025);
+
+-- Years
+insert into Years (TimeFrameID, YearNumber)
+values (1, 2026);
+insert into Years (TimeFrameID, YearNumber)
+values (2, 2026);
+insert into Years (TimeFrameID, YearNumber)
+values (3, 2026);
+insert into Years (TimeFrameID, YearNumber)
+values (4, 2026);
+insert into Years (TimeFrameID, YearNumber)
+values (5, 2025);
+
+-- NewsEvents
+insert into NewsEvents (EventID, Headline, SentimentScore, TimeFrameID, Happened)
+values (201, 'Earnings Beat', 85, 1, 1);
+insert into NewsEvents (EventID, Headline, SentimentScore, TimeFrameID, Happened)
+values (202, 'Product Recall Rumor', 30, 2, 1);
+insert into NewsEvents (EventID, Headline, SentimentScore, TimeFrameID, Happened)
+values (203, 'Regulatory Approval', 78, 3, 1);
+insert into NewsEvents (EventID, Headline, SentimentScore, TimeFrameID, Happened)
+values (204, 'CEO Interview', 60, 4, 1);
+insert into NewsEvents (EventID, Headline, SentimentScore, TimeFrameID, Happened)
+values (205, 'Market Selloff', 20, 5, 1);
+
+-- Trades
+insert into Trades (TickerSymbol, CompanyID, PublicDate, PercentageOfCompany)
+values ('AAPL', 101, DATE '2026-01-20', 10);
+insert into Trades (TickerSymbol, CompanyID, PublicDate, PercentageOfCompany)
+values ('MSFT', 102, DATE '2026-01-22', 12);
+insert into Trades (TickerSymbol, CompanyID, PublicDate, PercentageOfCompany)
+values ('TSLA', 103, DATE '2026-02-05', 15);
+insert into Trades (TickerSymbol, CompanyID, PublicDate, PercentageOfCompany)
+values ('SHOP', 104, DATE '2026-02-18', 8);
+insert into Trades (TickerSymbol, CompanyID, PublicDate, PercentageOfCompany)
+values ('NVDA', 105, DATE '2026-03-05', 20);
+
+-- Impacts
+insert into Impacts (TickerSymbol, EventID, PreEventPrice, PostEventPrice)
+values ('AAPL', 201, 180, 185);
+insert into Impacts (TickerSymbol, EventID, PreEventPrice, PostEventPrice)
+values ('MSFT', 202, 410, 405);
+insert into Impacts (TickerSymbol, EventID, PreEventPrice, PostEventPrice)
+values ('TSLA', 203, 195, 205);
+insert into Impacts (TickerSymbol, EventID, PreEventPrice, PostEventPrice)
+values ('SHOP', 204, 78, 80);
+insert into Impacts (TickerSymbol, EventID, PreEventPrice, PostEventPrice)
+values ('NVDA', 205, 870, 845);
+
+-- OnRelation
+insert into OnRelation (TickerSymbol, EventID)
+values ('AAPL', 201);
+insert into OnRelation (TickerSymbol, EventID)
+values ('MSFT', 202);
+insert into OnRelation (TickerSymbol, EventID)
+values ('TSLA', 203);
+insert into OnRelation (TickerSymbol, EventID)
+values ('SHOP', 204);
+insert into OnRelation (TickerSymbol, EventID)
+values ('NVDA', 205);
+
+commit;
